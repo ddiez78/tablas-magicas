@@ -459,10 +459,17 @@ function renderQuizQuestion() {
 
   // 4 opciones: la correcta + 3 distractores cercanos
   const options = new Set([answer]);
-  while (options.size < 4) {
-    const deltas = [q.a, -q.a, q.b, -q.b, 1, -1, 10, -10];
-    const wrong = answer + deltas[Math.floor(Math.random() * deltas.length)];
-    if (wrong > 0 && wrong !== answer) options.add(wrong);
+  const deltas = [q.a, -q.a, q.b, -q.b, 1, -1, 2, -2, 10, -10];
+  const candidates = [...new Set(deltas.map(d => answer + d))]
+    .filter(w => w > 0 && w !== answer)
+    .sort(() => Math.random() - 0.5);
+  for (const w of candidates) {
+    if (options.size >= 4) break;
+    options.add(w);
+  }
+  // Relleno de seguridad por si faltan candidatos (nunca puede bloquearse)
+  for (let extra = answer + 3; options.size < 4; extra++) {
+    options.add(extra);
   }
   const shuffled = [...options].sort(() => Math.random() - 0.5);
 
