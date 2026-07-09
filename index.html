@@ -1,0 +1,546 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🌟 Tablas Mágicas — Aprende a Multiplicar</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✖️</text></svg>">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --bg: #f0f7ff;
+    --card: #ffffff;
+    --primary: #6c5ce7;
+    --primary-dark: #5648c8;
+    --accent: #fd79a8;
+    --green: #00b894;
+    --yellow: #fdcb6e;
+    --red: #ff7675;
+    --text: #2d3436;
+    --shadow: 0 6px 0 rgba(0,0,0,0.12);
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Segoe UI', 'Comic Sans MS', system-ui, sans-serif;
+    background: linear-gradient(160deg, #a8e6ff 0%, #f0d9ff 50%, #ffe8f0 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  .screen { display: none; min-height: 100vh; padding: 16px; max-width: 900px; margin: 0 auto; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ---------- Header ---------- */
+  header {
+    text-align: center;
+    padding: 8px 0 4px;
+  }
+  h1 {
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+    color: var(--primary-dark);
+    text-shadow: 2px 2px 0 #fff;
+  }
+  .subtitle { font-size: clamp(0.9rem, 3vw, 1.2rem); color: #636e72; margin-top: 4px; }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    color: #fff;
+    background: var(--primary);
+    box-shadow: var(--shadow);
+    transition: transform 0.1s, box-shadow 0.1s;
+    user-select: none;
+  }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
+
+  .btn-big {
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    padding: 20px 28px;
+    width: 100%;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+  }
+  .btn-back {
+    background: #b2bec3;
+    font-size: 1rem;
+    padding: 10px 20px;
+    align-self: flex-start;
+    margin-bottom: 8px;
+  }
+  .btn-green { background: var(--green); }
+  .btn-pink { background: var(--accent); }
+  .btn-yellow { background: var(--yellow); color: var(--text); }
+
+  /* ---------- Menu ---------- */
+  .menu-buttons { margin-top: 24px; display: flex; flex-direction: column; }
+  .mascot { font-size: clamp(4rem, 14vw, 7rem); text-align: center; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+  /* ---------- Table picker grid ---------- */
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .table-card {
+    background: var(--card);
+    border: none;
+    border-radius: 22px;
+    padding: 18px 8px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: transform 0.1s;
+    font-family: inherit;
+  }
+  .table-card:active { transform: scale(0.95); }
+  .table-card .emoji { font-size: 2.6rem; display: block; }
+  .table-card .num { font-size: 1.5rem; font-weight: bold; color: var(--primary-dark); display: block; margin-top: 6px; }
+  .table-card .stars { font-size: 0.95rem; margin-top: 4px; display: block; min-height: 1.2em; }
+
+  /* ---------- Learn screen ---------- */
+  .learn-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .learn-nav .btn { font-size: 1.6rem; padding: 12px 24px; flex-shrink: 0; }
+  .operation {
+    text-align: center;
+    font-size: clamp(2rem, 8vw, 3.4rem);
+    font-weight: bold;
+    color: var(--primary-dark);
+    background: var(--card);
+    border-radius: 22px;
+    padding: 14px;
+    box-shadow: var(--shadow);
+    flex: 1;
+  }
+  .operation .result { color: var(--accent); }
+
+  .visual-area {
+    background: var(--card);
+    border-radius: 22px;
+    padding: 20px;
+    margin-top: 14px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .visual-explain { font-size: clamp(1rem, 3.5vw, 1.3rem); color: #636e72; margin-bottom: 14px; font-weight: bold; }
+  .groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+  .group {
+    background: #f1f2f6;
+    border: 3px dashed #c8d0e0;
+    border-radius: 16px;
+    padding: 10px;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(var(--cols, 3), auto);
+    animation: pop 0.3s ease backwards;
+  }
+  .group span { font-size: clamp(1.3rem, 4vw, 1.9rem); line-height: 1; }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+  .say-btn { margin-top: 16px; background: var(--yellow); color: var(--text); font-size: 1.1rem; padding: 12px 24px; }
+
+  /* ---------- Quiz screen ---------- */
+  .quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card);
+    border-radius: 18px;
+    padding: 10px 18px;
+    box-shadow: var(--shadow);
+    margin: 10px 0;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  .lives { font-size: 1.3rem; }
+  .progress-bar { flex: 1; height: 14px; background: #e6e9f0; border-radius: 10px; margin: 0 14px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--yellow)); border-radius: 10px; width: 0%; transition: width 0.4s; }
+
+  .quiz-question {
+    text-align: center;
+    font-size: clamp(2.4rem, 10vw, 4rem);
+    font-weight: bold;
+    color: var(--primary-dark);
+    background: var(--card);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+  }
+  .quiz-visual { min-height: 0; }
+  .quiz-visual .groups { margin: 10px 0; }
+  .quiz-visual .group span { font-size: clamp(1rem, 3vw, 1.4rem); }
+
+  .answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: auto;
+    padding-bottom: 10px;
+  }
+  .answer-btn {
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
+    padding: 22px;
+    background: var(--primary);
+  }
+  .answer-btn.correct { background: var(--green); animation: pulse 0.4s; }
+  .answer-btn.wrong { background: var(--red); animation: shake 0.4s; }
+  @keyframes pulse { 50% { transform: scale(1.1); } }
+  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+  .feedback {
+    text-align: center;
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    font-weight: bold;
+    min-height: 2em;
+    padding: 6px;
+  }
+  .feedback.good { color: var(--green); }
+  .feedback.bad { color: var(--red); }
+
+  /* ---------- Results ---------- */
+  .results-card {
+    background: var(--card);
+    border-radius: 26px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    margin: auto;
+    width: 100%;
+    max-width: 460px;
+  }
+  .results-card .big-emoji { font-size: 5rem; }
+  .results-card h2 { color: var(--primary-dark); font-size: 2rem; margin: 10px 0; }
+  .results-card .score-text { font-size: 1.3rem; margin: 8px 0; }
+  .results-card .stars-earned { font-size: 2.6rem; margin: 12px 0; letter-spacing: 6px; }
+
+  /* ---------- Confetti ---------- */
+  .confetti {
+    position: fixed;
+    top: -20px;
+    font-size: 1.6rem;
+    animation: fall linear forwards;
+    pointer-events: none;
+    z-index: 99;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); }
+  }
+
+  @media (min-width: 700px) {
+    .answers { grid-template-columns: repeat(4, 1fr); }
+    .menu-buttons { max-width: 480px; margin-left: auto; margin-right: auto; width: 100%; }
+  }
+</style>
+
+<!-- ============ MENU ============ -->
+<div class="screen active" id="screen-menu">
+  <header>
+    <div class="mascot">🦉</div>
+    <h1>🌟 Tablas Mágicas 🌟</h1>
+    <p class="subtitle">¡Aprende a multiplicar jugando!</p>
+  </header>
+  <div class="menu-buttons">
+    <button class="btn btn-big btn-green" onclick="goPickTable('learn')">📖 Aprender una tabla</button>
+    <button class="btn btn-big btn-pink" onclick="goPickTable('quiz')">🎮 ¡Jugar y practicar!</button>
+    <button class="btn btn-big btn-yellow" onclick="startQuiz(0)">🏆 Reto: ¡todas las tablas!</button>
+  </div>
+</div>
+
+<!-- ============ PICK TABLE ============ -->
+<div class="screen" id="screen-pick">
+  <button class="btn btn-back" onclick="show('menu')">⬅ Volver</button>
+  <header><h1 id="pick-title">Elige una tabla</h1></header>
+  <div class="table-grid" id="table-grid"></div>
+</div>
+
+<!-- ============ LEARN ============ -->
+<div class="screen" id="screen-learn">
+  <button class="btn btn-back" onclick="goPickTable('learn')">⬅ Volver</button>
+  <div class="learn-nav">
+    <button class="btn" onclick="learnStep(-1)">◀</button>
+    <div class="operation" id="learn-op"></div>
+    <button class="btn" onclick="learnStep(1)">▶</button>
+  </div>
+  <div class="visual-area">
+    <div class="visual-explain" id="learn-explain"></div>
+    <div class="groups" id="learn-groups"></div>
+    <button class="btn say-btn" onclick="sayOperation()">🔊 Escuchar</button>
+  </div>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="screen" id="screen-quiz">
+  <button class="btn btn-back" onclick="show('menu')">⬅ Salir</button>
+  <div class="quiz-top">
+    <span id="quiz-count">1/10</span>
+    <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
+    <span class="lives" id="quiz-lives">❤️❤️❤️</span>
+  </div>
+  <div class="quiz-question" id="quiz-question"></div>
+  <div class="visual-area quiz-visual" id="quiz-visual-area">
+    <div class="groups" id="quiz-groups"></div>
+  </div>
+  <div class="feedback" id="quiz-feedback"></div>
+  <div class="answers" id="quiz-answers"></div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div class="screen" id="screen-results">
+  <div class="results-card">
+    <div class="big-emoji" id="res-emoji">🎉</div>
+    <h2 id="res-title">¡Muy bien!</h2>
+    <p class="score-text" id="res-score"></p>
+    <div class="stars-earned" id="res-stars"></div>
+    <button class="btn btn-big btn-green" onclick="retryQuiz()">🔄 Jugar otra vez</button>
+    <button class="btn btn-big" onclick="show('menu')">🏠 Menú principal</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// Emoji por tabla: cada número tiene su dibujo
+const EMOJIS = { 1:'🍎', 2:'🐥', 3:'🍓', 4:'🚗', 5:'⭐', 6:'🐞', 7:'🌈', 8:'🐙', 9:'🎈', 10:'🍩' };
+const NAMES  = { 1:'manzanas', 2:'pollitos', 3:'fresas', 4:'coches', 5:'estrellas', 6:'mariquitas', 7:'arcoíris', 8:'pulpos', 9:'globos', 10:'donuts' };
+
+let currentTable = 2;
+let learnIndex = 1;
+let quiz = null;
+
+// ---------- Estrellas guardadas (progreso) ----------
+function getStars(table) {
+  try { return parseInt(localStorage.getItem('stars-' + table) || '0'); } catch(e) { return 0; }
+}
+function setStars(table, stars) {
+  try {
+    if (stars > getStars(table)) localStorage.setItem('stars-' + table, String(stars));
+  } catch(e) {}
+}
+
+// ---------- Navegación ----------
+function show(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goPickTable(mode) {
+  const grid = document.getElementById('table-grid');
+  document.getElementById('pick-title').textContent =
+    mode === 'learn' ? '📖 ¿Qué tabla quieres aprender?' : '🎮 ¿Con qué tabla jugamos?';
+  grid.innerHTML = '';
+  for (let t = 1; t <= 10; t++) {
+    const stars = getStars(t);
+    const btn = document.createElement('button');
+    btn.className = 'table-card';
+    btn.innerHTML =
+      '<span class="emoji">' + EMOJIS[t] + '</span>' +
+      '<span class="num">Tabla del ' + t + '</span>' +
+      '<span class="stars">' + '⭐'.repeat(stars) + '</span>';
+    btn.onclick = () => mode === 'learn' ? startLearn(t) : startQuiz(t);
+    grid.appendChild(btn);
+  }
+  show('pick');
+}
+
+// ---------- Dibujos: grupos de emojis ----------
+// a × b  →  a grupos de b emojis
+function renderGroups(container, a, b, emoji) {
+  container.innerHTML = '';
+  const cols = b <= 5 ? b : Math.ceil(b / 2);
+  for (let i = 0; i < a; i++) {
+    const g = document.createElement('div');
+    g.className = 'group';
+    g.style.setProperty('--cols', cols);
+    g.style.animationDelay = (i * 0.08) + 's';
+    for (let j = 0; j < b; j++) {
+      const s = document.createElement('span');
+      s.textContent = emoji;
+      g.appendChild(s);
+    }
+    container.appendChild(g);
+  }
+}
+
+// ---------- Modo aprender ----------
+function startLearn(table) {
+  currentTable = table;
+  learnIndex = 1;
+  renderLearn();
+  show('learn');
+}
+
+function learnStep(dir) {
+  learnIndex += dir;
+  if (learnIndex < 1) learnIndex = 10;
+  if (learnIndex > 10) learnIndex = 1;
+  renderLearn();
+}
+
+function renderLearn() {
+  const t = currentTable, n = learnIndex, r = t * n;
+  document.getElementById('learn-op').innerHTML =
+    t + ' × ' + n + ' = <span class="result">' + r + '</span>';
+  document.getElementById('learn-explain').textContent =
+    t + ' grupos de ' + n + ' ' + NAMES[t] + ' son ' + r + ' ' + NAMES[t];
+  renderGroups(document.getElementById('learn-groups'), t, n, EMOJIS[t]);
+}
+
+function sayOperation() {
+  if (!('speechSynthesis' in window)) return;
+  const t = currentTable, n = learnIndex;
+  const msg = new SpeechSynthesisUtterance(t + ' por ' + n + ' es igual a ' + (t * n));
+  msg.lang = 'es-ES';
+  msg.rate = 0.9;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
+
+// ---------- Modo juego (quiz) ----------
+const QUIZ_LENGTH = 10;
+const PRAISE = ['¡Genial! 🎉', '¡Súper! ⭐', '¡Muy bien! 👏', '¡Eres un crack! 🚀', '¡Perfecto! 💪'];
+const OOPS = ['¡Casi! Inténtalo otra vez 💪', '¡Uy! Mira los dibujos 👀', '¡No pasa nada, sigue! 🌈'];
+
+function startQuiz(table) {
+  // table = 0 → reto con todas las tablas
+  currentTable = table;
+  const questions = [];
+  const used = new Set();
+  while (questions.length < QUIZ_LENGTH) {
+    const a = table === 0 ? 1 + Math.floor(Math.random() * 10) : table;
+    const b = 1 + Math.floor(Math.random() * 10);
+    const key = a + 'x' + b;
+    if (used.has(key)) continue;
+    used.add(key);
+    questions.push({ a, b });
+  }
+  quiz = { questions, index: 0, correct: 0, lives: 3, locked: false };
+  renderQuizQuestion();
+  show('quiz');
+}
+
+function retryQuiz() {
+  startQuiz(currentTable);
+}
+
+function renderQuizQuestion() {
+  const q = quiz.questions[quiz.index];
+  const answer = q.a * q.b;
+
+  document.getElementById('quiz-count').textContent = (quiz.index + 1) + '/' + QUIZ_LENGTH;
+  document.getElementById('quiz-progress').style.width = (quiz.index / QUIZ_LENGTH * 100) + '%';
+  document.getElementById('quiz-lives').textContent = '❤️'.repeat(quiz.lives) + '🤍'.repeat(3 - quiz.lives);
+  document.getElementById('quiz-question').textContent = q.a + ' × ' + q.b + ' = ?';
+  document.getElementById('quiz-feedback').textContent = '';
+  document.getElementById('quiz-feedback').className = 'feedback';
+
+  renderGroups(document.getElementById('quiz-groups'), q.a, q.b, EMOJIS[q.a]);
+
+  // 4 opciones: la correcta + 3 distractores cercanos
+  const options = new Set([answer]);
+  while (options.size < 4) {
+    const deltas = [q.a, -q.a, q.b, -q.b, 1, -1, 10, -10];
+    const wrong = answer + deltas[Math.floor(Math.random() * deltas.length)];
+    if (wrong > 0 && wrong !== answer) options.add(wrong);
+  }
+  const shuffled = [...options].sort(() => Math.random() - 0.5);
+
+  const box = document.getElementById('quiz-answers');
+  box.innerHTML = '';
+  shuffled.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'btn answer-btn';
+    btn.textContent = val;
+    btn.onclick = () => answerQuiz(btn, val, answer);
+    box.appendChild(btn);
+  });
+  quiz.locked = false;
+}
+
+function answerQuiz(btn, val, answer) {
+  if (quiz.locked) return;
+  const fb = document.getElementById('quiz-feedback');
+
+  if (val === answer) {
+    quiz.locked = true;
+    btn.classList.add('correct');
+    quiz.correct++;
+    fb.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)];
+    fb.className = 'feedback good';
+    setTimeout(nextQuestion, 900);
+  } else {
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    quiz.lives--;
+    document.getElementById('quiz-lives').textContent = '❤️'.repeat(quiz.lives) + '🤍'.repeat(3 - quiz.lives);
+    fb.textContent = OOPS[Math.floor(Math.random() * OOPS.length)];
+    fb.className = 'feedback bad';
+    if (quiz.lives <= 0) {
+      quiz.locked = true;
+      // Mostrar la respuesta correcta y terminar
+      document.querySelectorAll('.answer-btn').forEach(b => {
+        if (parseInt(b.textContent) === answer) b.classList.add('correct');
+      });
+      setTimeout(showResults, 1200);
+    }
+  }
+}
+
+function nextQuestion() {
+  quiz.index++;
+  if (quiz.index >= QUIZ_LENGTH) showResults();
+  else renderQuizQuestion();
+}
+
+function showResults() {
+  const c = quiz.correct;
+  const stars = c >= 9 ? 3 : c >= 7 ? 2 : c >= 5 ? 1 : 0;
+  if (currentTable > 0) setStars(currentTable, stars);
+
+  const emoji = stars === 3 ? '🏆' : stars === 2 ? '🎉' : stars === 1 ? '😊' : '💪';
+  const title = stars === 3 ? '¡INCREÍBLE!' : stars === 2 ? '¡Muy bien!' : stars === 1 ? '¡Buen trabajo!' : '¡Sigue practicando!';
+
+  document.getElementById('res-emoji').textContent = emoji;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-score').textContent = 'Has acertado ' + c + ' de ' + QUIZ_LENGTH + ' preguntas';
+  document.getElementById('res-stars').textContent = stars > 0 ? '⭐'.repeat(stars) : '🌟 ¡La próxima vez lo conseguirás!';
+  show('results');
+
+  if (stars >= 2) throwConfetti();
+}
+
+function throwConfetti() {
+  const pieces = ['🎉','⭐','🎊','✨','🌟','💫'];
+  for (let i = 0; i < 30; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.animationDuration = (2 + Math.random() * 2) + 's';
+    el.style.animationDelay = (Math.random() * 0.8) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
+  }
+}
+</script>
