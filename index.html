@@ -285,6 +285,59 @@
   .btn-green { background: var(--green-dark); }
   .btn-pink { background: var(--pink); }
 
+  /* ---------- Personaje (avatar) ---------- */
+  #hud-avatar {
+    background: rgba(255,255,255,0.14); border: none; border-radius: 50%;
+    width: 42px; height: 42px; padding: 3px; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  #home-duo { display: flex; align-items: flex-end; justify-content: center; gap: 4px; }
+  #home-avatar { cursor: pointer; animation: petBounce 2.6s ease-in-out infinite reverse; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.3)); }
+  .btn-avatar-edit { align-self: center; margin-top: 12px; background: var(--pink); padding: 10px 20px; font-size: 1rem; }
+
+  .av-preview {
+    text-align: center; background: var(--card); border-radius: 22px;
+    padding: 12px; box-shadow: var(--shadow); margin-bottom: 12px;
+  }
+  #av-name {
+    font-family: inherit; font-size: 1.1rem; font-weight: 600; color: var(--ink);
+    border: 3px solid #cabfff; border-radius: 14px; padding: 10px 14px;
+    width: 100%; max-width: 280px; text-align: center; outline: none;
+    user-select: text; -webkit-user-select: text; background: #fff;
+  }
+  .av-row { background: rgba(255,255,255,0.13); border-radius: 16px; padding: 10px 12px; margin-bottom: 10px; }
+  .av-row-label { color: #fff; font-weight: 700; margin-bottom: 8px; font-size: 0.95rem; }
+  .av-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .av-chip {
+    border: 3px solid transparent; border-radius: 14px; background: rgba(255,255,255,0.92);
+    min-width: 44px; height: 42px; padding: 0 12px; cursor: pointer;
+    font-family: inherit; font-weight: 600; font-size: 0.9rem; color: var(--ink);
+    box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+  }
+  .av-chip.sel { border-color: var(--yellow); transform: scale(1.06); }
+  .av-chip.color-dot { width: 42px; min-width: 42px; padding: 0; }
+
+  /* Animaciones de interacción con la mascota */
+  .anim-spin { animation: spin720 0.8s ease; }
+  @keyframes spin720 { to { transform: rotate(720deg); } }
+  .anim-hop { animation: hop 0.45s ease 2; }
+  @keyframes hop { 50% { transform: translateY(-34px); } }
+  .anim-cheer { animation: cheer 0.45s ease 2; }
+  @keyframes cheer { 50% { transform: scale(1.18) rotate(-8deg); } }
+  body.quake { animation: quake 0.5s; }
+  @keyframes quake { 20% { transform: translate(7px,-5px); } 45% { transform: translate(-7px,5px); } 70% { transform: translate(5px,3px); } }
+  .screen-flash.fire { background: rgba(255,140,40,0.4); }
+
+  #boss-row { display: flex; align-items: center; justify-content: space-around; gap: 6px; }
+  #boss-hero { line-height: 0; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.35)); }
+  #boss-hero.hurt { animation: shake 0.45s; }
+  #boss-hero.lunge { animation: lunge 0.5s; }
+  @keyframes lunge { 40% { transform: translateX(36px) rotate(10deg); } }
+  #boss-vs { font-weight: 700; color: #fff; font-size: clamp(1.2rem, 4vw, 1.8rem); text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+
+  #res-duo { display: flex; justify-content: center; align-items: flex-end; gap: 8px; margin-bottom: 4px; line-height: 0; }
+  #res-duo .res-pet { font-size: 2.8rem; line-height: 1; animation: petBounce 1.4s infinite; display: inline-block; }
+
   /* ---------- Efectos flotantes ---------- */
   .float-fx {
     position: fixed; z-index: 50; font-weight: 700; font-size: 1.5rem;
@@ -312,6 +365,7 @@
 
 <!-- ============ HUD ============ -->
 <div id="hud">
+  <button id="hud-avatar" onclick="openAvatar()" title="Tu personaje"></button>
   <span class="level-badge" id="hud-level">Nivel 1</span>
   <div id="xp-wrap"><div id="xp-bar"><div id="xp-fill"></div></div></div>
   <span class="hud-chip" id="hud-coins">🪙 0</span>
@@ -321,10 +375,14 @@
 
 <!-- ============ MENÚ ============ -->
 <div class="screen active" id="screen-menu">
-  <div id="home-pet" onclick="petTalk()">🦉</div>
+  <div id="home-duo">
+    <div id="home-avatar" onclick="openAvatar()"></div>
+    <div id="home-pet" onclick="petInteract()">🦉</div>
+  </div>
   <div id="pet-speech">¡Hola! ¿Jugamos?</div>
   <h1>Tablas Mágicas</h1>
   <p class="subtitle">¡La aventura de multiplicar!</p>
+  <button class="btn btn-avatar-edit" onclick="openAvatar()">🎨 Crea tu personaje</button>
   <div class="mode-grid">
     <button class="mode-card mc-boss" onclick="goPickTable('boss')">
       <span class="icon">👾</span><span class="name">Batalla</span>
@@ -369,7 +427,11 @@
   </div>
   <div id="boss-arena">
     <div id="boss-name">Blobby</div>
-    <span id="boss-emoji">👾</span>
+    <div id="boss-row">
+      <div id="boss-hero"></div>
+      <span id="boss-vs">⚔️</span>
+      <span id="boss-emoji">👾</span>
+    </div>
     <div class="hp-track"><div class="hp-fill" id="boss-hp"></div></div>
   </div>
   <div class="timer-track"><div class="timer-fill" id="boss-timer"></div></div>
@@ -424,9 +486,22 @@
   <div class="shop-grid" id="shop-grid"></div>
 </div>
 
+<!-- ============ PERSONAJE ============ -->
+<div class="screen" id="screen-avatar">
+  <button class="btn btn-back" onclick="show('menu')">⬅ Volver</button>
+  <h1>🎨 Tu personaje</h1>
+  <p class="subtitle">¡Hazlo igual que tú!</p>
+  <div class="av-preview" id="av-preview" style="margin-top:12px;"></div>
+  <div style="text-align:center; margin-bottom:12px;">
+    <button class="btn" style="background:var(--orange); padding:11px 22px; font-size:1rem;" onclick="randomAvatar()">🎲 ¡Sorpresa!</button>
+  </div>
+  <div id="av-rows"></div>
+</div>
+
 <!-- ============ RESULTADOS ============ -->
 <div class="screen" id="screen-results">
   <div class="results-card">
+    <div id="res-duo"></div>
     <span class="big-emoji" id="res-emoji">🎉</span>
     <h2 id="res-title">¡Muy bien!</h2>
     <p id="res-detail" style="font-weight:600; color:#6c5b9e;"></p>
@@ -464,16 +539,19 @@ const PETS = [
   { e:'🐲', n:'Dragón', price: 800 },
   { e:'🦁', n:'Rey León', price: 1000 },
 ];
-const PET_PHRASES = ['¡Tú puedes! 💪', '¡Vamos a por monedas! 🪙', '¡Multiplicar mola! ✨', '¡Eres genial! 🌟', '¿Derrotamos a un monstruo? 👾', '¡Qué bien juegas! 🎮'];
 
 // ==================== ESTADO ====================
-const DEFAULT_STATE = { coins: 0, xp: 0, pets: ['🦉'], pet: '🦉', stars: {}, bestBlitz: 0, bossesBeaten: 0, boards: 0, sound: true, lastDay: '', fireStreak: 0 };
+const DEFAULT_STATE = { coins: 0, xp: 0, pets: ['🦉'], pet: '🦉', stars: {}, bestBlitz: 0, bossesBeaten: 0, boards: 0, sound: true, lastDay: '', fireStreak: 0, name: '', avatar: { skin: 0, hair: 1, hairC: 0, eyes: 0, mouth: 0, acc: 0, shirt: 4 } };
 let S = loadState();
 
 function loadState() {
   try {
     const raw = localStorage.getItem('tm-state-v2');
-    if (raw) return Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+    if (raw) {
+      const st = Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
+      st.avatar = Object.assign({}, DEFAULT_STATE.avatar, st.avatar || {});
+      return st;
+    }
   } catch(e) {}
   const st = Object.assign({}, DEFAULT_STATE, { stars: {} });
   // Migrar estrellas de la versión anterior
@@ -521,6 +599,8 @@ function updateHud() {
   document.getElementById('hud-streak').textContent = '🔥 ' + S.fireStreak;
   document.getElementById('btn-sound').textContent = S.sound ? '🔊' : '🔇';
   document.getElementById('home-pet').textContent = S.pet;
+  document.getElementById('home-avatar').innerHTML = avatarSVG(S.avatar, homeAvatarSize());
+  document.getElementById('hud-avatar').innerHTML = avatarSVG(S.avatar, 30);
   document.getElementById('best-blitz').textContent = '🏆 Récord: ' + S.bestBlitz;
   document.getElementById('best-boss').textContent = '🏆 ' + S.bossesBeaten + ' jefes';
   document.getElementById('best-memory').textContent = '🏆 ' + S.boards + ' tableros';
@@ -619,14 +699,13 @@ function show(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
   window.scrollTo(0, 0);
-  if (name === 'menu') updateHud();
+  if (name === 'menu') {
+    updateHud();
+    document.getElementById('pet-speech').textContent = '¡Hola' + (S.name ? ', ' + S.name : '') + '! Toca a ' + petName() + ' o juega 👇';
+  }
 }
 function exitGame() { show('menu'); }
-
-function petTalk() {
-  document.getElementById('pet-speech').textContent = PET_PHRASES[Math.floor(Math.random() * PET_PHRASES.length)];
-  sfxFlip();
-}
+function petName() { const p = PETS.find(x => x.e === S.pet); return p ? p.n : 'tu mascota'; }
 
 // ==================== SELECTOR DE TABLA ====================
 let pickMode = 'boss';
@@ -704,6 +783,7 @@ function startBoss(table) {
   boss = { table, hp: BOSS_HP, hearts: 3, coins: 0, locked: false, info: BOSSES[bossIdx], t0: 0 };
   document.getElementById('boss-name').textContent = boss.info.n + (table === 0 ? ' (¡jefe final!)' : ' — tabla del ' + table);
   document.getElementById('boss-emoji').textContent = boss.info.e;
+  document.getElementById('boss-hero').innerHTML = avatarSVG(S.avatar, Math.min(85, Math.max(60, Math.round(window.innerWidth * 0.14))));
   bossNextQuestion();
   show('boss');
   bossRunTimerLoop();
@@ -747,6 +827,8 @@ function bossAnswer(btn, isCorrect, ev) {
     if (fast) comboBanner('⚡ ¡CRÍTICO! -2');
     const be = document.getElementById('boss-emoji');
     be.classList.remove('hit'); void be.offsetWidth; be.classList.add('hit');
+    const hero = document.getElementById('boss-hero');
+    hero.classList.remove('lunge', 'hurt'); void hero.offsetWidth; hero.classList.add('lunge');
     if (ev) floatFx('+' + earned + ' 🪙', ev.clientX, ev.clientY);
     bossPaint();
     if (boss.hp <= 0) { addTimer(setTimeout(bossWin, 700)); }
@@ -765,6 +847,8 @@ function bossPlayerHit(msg) {
   screenFlash();
   const be = document.getElementById('boss-emoji');
   be.classList.remove('attack'); void be.offsetWidth; be.classList.add('attack');
+  const hero = document.getElementById('boss-hero');
+  hero.classList.remove('lunge', 'hurt'); void hero.offsetWidth; hero.classList.add('hurt');
   comboBanner(msg);
   bossPaint();
   if (boss.hearts <= 0) { addTimer(setTimeout(bossLose, 800)); }
@@ -977,6 +1061,202 @@ function sayOperation() {
   speechSynthesis.cancel(); speechSynthesis.speak(msg);
 }
 
+// ==================== PERSONAJE (estilo Mii) ====================
+const SKINS = ['#ffdfc4', '#f0c8a0', '#dda775', '#b07b4f', '#8d5524'];
+const HAIR_COLORS = ['#3b2f2f', '#6b4226', '#e8c56b', '#e0662b', '#8854d0', '#2e86de'];
+const SHIRTS = ['#ff6b6b', '#ff9f43', '#ffd23f', '#2ee6a8', '#4dc9ff', '#a55eea'];
+const HAIR_NAMES = ['Nada', 'Corto', 'De punta', 'Largo', 'Rizado', 'Coleta'];
+const EYE_NAMES = ['Puntos', 'Felices', 'Grandes', 'Guiño', 'Chispas'];
+const MOUTH_NAMES = ['Sonrisa', 'Risa', 'Lengua', 'Sorpresa'];
+const ACC_NAMES = ['Nada', 'Gafas', 'De sol', 'Gorra', 'Corona', 'Lazo'];
+
+function hairSvg(style, c) {
+  const cap = '<path d="M20.2,52 A30,30 0 0 1 79.8,52 Z" fill="' + c + '"/>';
+  switch (style) {
+    case 1: return cap;
+    case 2: return cap +
+      '<polygon points="30,34 35,15 41,30" fill="' + c + '"/>' +
+      '<polygon points="44,28 50,11 56,28" fill="' + c + '"/>' +
+      '<polygon points="59,30 65,15 70,34" fill="' + c + '"/>';
+    case 3: return cap +
+      '<path d="M21,48 Q13,78 17,93 L33,93 Q26,70 26,52 Z" fill="' + c + '"/>' +
+      '<path d="M79,48 Q87,78 83,93 L67,93 Q74,70 74,52 Z" fill="' + c + '"/>';
+    case 4: return cap +
+      '<circle cx="27" cy="37" r="9" fill="' + c + '"/><circle cx="39" cy="28" r="10" fill="' + c + '"/>' +
+      '<circle cx="51" cy="25" r="10" fill="' + c + '"/><circle cx="63" cy="28" r="10" fill="' + c + '"/>' +
+      '<circle cx="74" cy="37" r="9" fill="' + c + '"/>';
+    case 5: return cap + '<circle cx="50" cy="17" r="9" fill="' + c + '"/><circle cx="50" cy="17" r="4" fill="rgba(0,0,0,0.15)"/>';
+    default: return '';
+  }
+}
+function eyesSvg(style) {
+  const ink = '#2d2154';
+  switch (style) {
+    case 1: return '<path d="M32,54 Q38,46 44,54" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
+                   '<path d="M56,54 Q62,46 68,54" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+    case 2: return '<circle cx="38" cy="52" r="7" fill="#fff" stroke="' + ink + '" stroke-width="1.6"/><circle cx="39.5" cy="53" r="3.4" fill="' + ink + '"/>' +
+                   '<circle cx="62" cy="52" r="7" fill="#fff" stroke="' + ink + '" stroke-width="1.6"/><circle cx="60.5" cy="53" r="3.4" fill="' + ink + '"/>';
+    case 3: return '<circle cx="38" cy="52" r="3.6" fill="' + ink + '"/>' +
+                   '<path d="M56,52 Q62,47 68,52" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+    case 4: return sparkle(38, 52) + sparkle(62, 52);
+    default: return '<circle cx="38" cy="52" r="3.6" fill="' + ink + '"/><circle cx="62" cy="52" r="3.6" fill="' + ink + '"/>';
+  }
+}
+function sparkle(x, y) {
+  return '<path d="M' + x + ',' + (y-7) + ' L' + (x+2.5) + ',' + (y-2) + ' L' + (x+7) + ',' + y + ' L' + (x+2.5) + ',' + (y+2) +
+    ' L' + x + ',' + (y+7) + ' L' + (x-2.5) + ',' + (y+2) + ' L' + (x-7) + ',' + y + ' L' + (x-2.5) + ',' + (y-2) + ' Z" fill="#f6b93b"/>';
+}
+function mouthSvg(style) {
+  const ink = '#2d2154';
+  switch (style) {
+    case 1: return '<path d="M38,64 Q50,83 62,64 Z" fill="#7a3b4b"/><rect x="41" y="64.5" width="18" height="4" rx="2" fill="#fff"/>';
+    case 2: return '<path d="M40,65 Q50,76 60,65" stroke="' + ink + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
+                   '<ellipse cx="53" cy="72" rx="5" ry="4" fill="#ff8fab"/>';
+    case 3: return '<ellipse cx="50" cy="69" rx="5" ry="6.5" fill="#7a3b4b"/>';
+    default: return '<path d="M40,65 Q50,77 60,65" stroke="' + ink + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
+  }
+}
+function accSvg(style) {
+  const ink = '#2d2154';
+  switch (style) {
+    case 1: return '<circle cx="38" cy="52" r="9.5" fill="none" stroke="' + ink + '" stroke-width="2.6"/>' +
+                   '<circle cx="62" cy="52" r="9.5" fill="none" stroke="' + ink + '" stroke-width="2.6"/>' +
+                   '<line x1="47.5" y1="52" x2="52.5" y2="52" stroke="' + ink + '" stroke-width="2.6"/>';
+    case 2: return '<circle cx="38" cy="52" r="9.5" fill="' + ink + '"/><circle cx="62" cy="52" r="9.5" fill="' + ink + '"/>' +
+                   '<line x1="47.5" y1="52" x2="52.5" y2="52" stroke="' + ink + '" stroke-width="3"/>';
+    case 3: return '<path d="M23,40 A28,21 0 0 1 77,40 L77,45 L23,45 Z" fill="#d63031"/>' +
+                   '<path d="M60,39 L88,39 Q91,45 84,46.5 L60,45 Z" fill="#b02525"/>';
+    case 4: return '<path d="M30,30 L36,15 L44,26 L50,10 L56,26 L64,15 L70,30 Z" fill="#ffd23f" stroke="#e8b70e" stroke-width="1.5"/>';
+    case 5: return '<circle cx="67" cy="27" r="3.5" fill="#ff5fa2"/>' +
+                   '<path d="M67,27 L56,20 L59,33 Z" fill="#ff5fa2"/><path d="M67,27 L78,20 L75,33 Z" fill="#ff5fa2"/>';
+    default: return '';
+  }
+}
+function avatarSVG(av, size) {
+  return '<svg viewBox="0 0 100 120" width="' + size + '" height="' + Math.round(size * 1.2) + '" style="vertical-align:bottom;">' +
+    '<path d="M24,120 Q24,86 50,86 Q76,86 76,120 Z" fill="' + SHIRTS[av.shirt] + '"/>' +
+    '<circle cx="50" cy="55" r="30" fill="' + SKINS[av.skin] + '"/>' +
+    hairSvg(av.hair, HAIR_COLORS[av.hairC]) +
+    '<circle cx="34" cy="62" r="4" fill="rgba(255,105,140,0.35)"/><circle cx="66" cy="62" r="4" fill="rgba(255,105,140,0.35)"/>' +
+    eyesSvg(av.eyes) +
+    mouthSvg(av.mouth) +
+    accSvg(av.acc) +
+    '</svg>';
+}
+
+const AV_ROWS = [
+  { key: 'skin',  label: '🖐️ Piel',          type: 'color', values: SKINS },
+  { key: 'hair',  label: '💇 Peinado',        type: 'text',  values: HAIR_NAMES },
+  { key: 'hairC', label: '🎨 Color de pelo',  type: 'color', values: HAIR_COLORS },
+  { key: 'eyes',  label: '👀 Ojos',           type: 'text',  values: EYE_NAMES },
+  { key: 'mouth', label: '👄 Boca',           type: 'text',  values: MOUTH_NAMES },
+  { key: 'acc',   label: '🕶️ Complemento',    type: 'text',  values: ACC_NAMES },
+  { key: 'shirt', label: '👕 Camiseta',       type: 'color', values: SHIRTS },
+];
+
+function openAvatar() {
+  renderAvatarEditor();
+  show('avatar');
+}
+function renderAvatarEditor() {
+  document.getElementById('av-preview').innerHTML =
+    avatarSVG(S.avatar, 130) +
+    '<div style="margin-top:10px;"><input id="av-name" maxlength="12" placeholder="¿Cómo te llamas?" value="' + S.name.replace(/["<>&]/g, '') + '"></div>';
+  document.getElementById('av-name').oninput = (e) => { S.name = e.target.value.replace(/["<>&]/g, '').slice(0, 12); save(); };
+  const rows = document.getElementById('av-rows');
+  rows.innerHTML = '';
+  AV_ROWS.forEach(row => {
+    const div = document.createElement('div');
+    div.className = 'av-row';
+    const label = document.createElement('div');
+    label.className = 'av-row-label';
+    label.textContent = row.label;
+    div.appendChild(label);
+    const chips = document.createElement('div');
+    chips.className = 'av-chips';
+    row.values.forEach((v, i) => {
+      const chip = document.createElement('button');
+      chip.className = 'av-chip' + (row.type === 'color' ? ' color-dot' : '') + (S.avatar[row.key] === i ? ' sel' : '');
+      if (row.type === 'color') chip.style.background = v;
+      else chip.textContent = v;
+      chip.onclick = () => { S.avatar[row.key] = i; save(); sfxFlip(); renderAvatarEditor(); updateHud(); };
+      chips.appendChild(chip);
+    });
+    div.appendChild(chips);
+    rows.appendChild(div);
+  });
+}
+function randomAvatar() {
+  AV_ROWS.forEach(r => { S.avatar[r.key] = Math.floor(Math.random() * r.values.length); });
+  save(); sfxCoin();
+  renderAvatarEditor();
+  updateHud();
+}
+
+// ==================== INTERACCIONES CON LA MASCOTA ====================
+function nm() { return S.name ? ', ' + S.name : ''; }
+function speech(text) { document.getElementById('pet-speech').textContent = text; }
+function emojiRain(emoji, n) {
+  for (let i = 0; i < n; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.textContent = emoji;
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.animationDuration = (1.6 + Math.random() * 1.6) + 's';
+    el.style.animationDelay = (Math.random() * 0.5) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+}
+function animate(el, cls) {
+  el.classList.remove('anim-spin', 'anim-hop', 'anim-cheer');
+  void el.offsetWidth;
+  el.classList.add(cls);
+}
+function fireFlash() {
+  const el = document.createElement('div');
+  el.className = 'screen-flash fire';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 500);
+}
+const PET_FX = {
+  '🦉': (pet, hero) => {
+    const a = 2 + Math.floor(Math.random() * 8), b = 2 + Math.floor(Math.random() * 8);
+    speech('🦉 ¿Sabías que ' + a + ' × ' + b + ' = ' + (a * b) + '?');
+    animate(pet, 'anim-cheer'); sfxFlip();
+  },
+  '🐶': (pet, hero) => { speech('¡Guau guau' + nm() + '! ¡Te quiero! 💖'); animate(pet, 'anim-hop'); animate(hero, 'anim-cheer'); emojiRain('💖', 10); sfxCoin(); },
+  '🐱': (pet, hero) => { speech('Prrrr… prrrr… 🐾 ¡Mimos' + nm() + '!'); animate(pet, 'anim-cheer'); emojiRain('🐾', 8); tone(600, 0, 0.3, 'sine', 0.06); tone(500, 0.25, 0.3, 'sine', 0.06); },
+  '🐰': (pet, hero) => { speech('¡Boing boing! 🥕 ¡Salta conmigo' + nm() + '!'); animate(pet, 'anim-hop'); animate(hero, 'anim-hop'); emojiRain('🥕', 8); sfxFlip(); },
+  '🦊': (pet, hero) => { speech('¡Mira mi pirueta mágica! ✨'); animate(pet, 'anim-spin'); emojiRain('✨', 10); sfxCoin(); },
+  '🐼': (pet, hero) => { speech('Ñam ñam… ¿quieres bambú' + nm() + '? 🎋'); animate(pet, 'anim-cheer'); emojiRain('🎋', 8); tone(300, 0, 0.15, 'sine', 0.07); tone(280, 0.18, 0.15, 'sine', 0.07); },
+  '🦖': (pet, hero) => {
+    speech('¡¡RAAAAWR!! 🦖 ¡Soy el rey de las tablas!');
+    comboBanner('🦖 ¡RAAAWR!');
+    document.body.classList.remove('quake'); void document.body.offsetWidth; document.body.classList.add('quake');
+    animate(hero, 'anim-hop');
+    tone(90, 0, 0.5, 'sawtooth', 0.15); tone(70, 0.3, 0.6, 'sawtooth', 0.15);
+  },
+  '🦄': (pet, hero) => { speech('✨ ¡Magia arcoíris para ti' + nm() + '! 🌈'); animate(pet, 'anim-spin'); animate(hero, 'anim-cheer'); emojiRain('🌈', 6); throwConfetti(18); sfxLevelUp(); },
+  '🐲': (pet, hero) => { speech('¡FUEGO de dragón! 🔥 ¡Nada nos detiene!'); animate(pet, 'anim-cheer'); emojiRain('🔥', 12); fireFlash(); tone(120, 0, 0.4, 'sawtooth', 0.12); tone(160, 0.2, 0.4, 'sawtooth', 0.1); },
+  '🦁': (pet, hero) => {
+    speech('👑 ¡Eres de la realeza' + nm() + '!');
+    animate(pet, 'anim-cheer'); animate(hero, 'anim-cheer');
+    emojiRain('👑', 6); sfxWin();
+    // Corona temporal en el personaje
+    const prev = S.avatar.acc;
+    S.avatar.acc = 4;
+    document.getElementById('home-avatar').innerHTML = avatarSVG(S.avatar, homeAvatarSize());
+    setTimeout(() => { S.avatar.acc = prev; document.getElementById('home-avatar').innerHTML = avatarSVG(S.avatar, homeAvatarSize()); }, 2600);
+  },
+};
+function petInteract() {
+  const pet = document.getElementById('home-pet');
+  const hero = document.getElementById('home-avatar');
+  (PET_FX[S.pet] || PET_FX['🦉'])(pet, hero);
+}
+function homeAvatarSize() { return Math.min(90, Math.max(64, Math.round(window.innerWidth * 0.16))); }
+
 // ==================== TIENDA ====================
 function openShop() {
   const grid = document.getElementById('shop-grid');
@@ -1020,6 +1300,7 @@ function selectPet(e) {
 // ==================== RESULTADOS ====================
 function showResults(r) {
   clearTimers();
+  document.getElementById('res-duo').innerHTML = avatarSVG(S.avatar, 60) + '<span class="res-pet">' + S.pet + '</span>';
   document.getElementById('res-emoji').textContent = r.emoji;
   document.getElementById('res-title').textContent = r.title;
   document.getElementById('res-detail').textContent = r.detail || '';
