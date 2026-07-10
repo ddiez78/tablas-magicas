@@ -3,7 +3,7 @@
 <title>🚀 Tablas Mágicas — ¡La aventura de multiplicar!</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
@@ -99,7 +99,14 @@
   .screen.leaving { opacity: 0; pointer-events: none; transform: translateY(-10px) scale(0.985); position: absolute; }
   #screens-wrap { position: relative; }
 
-  h1 { font-size: clamp(1.5rem, 5.5vw, 2.4rem); color: #fff; text-align: center; text-shadow: 0 3px 0 rgba(0,0,0,0.25); }
+  h1 {
+    font-family: 'Bangers', 'Fredoka', cursive;
+    font-weight: 400;
+    letter-spacing: 2.5px;
+    font-size: clamp(1.8rem, 6.5vw, 2.9rem);
+    color: #fff; text-align: center;
+    text-shadow: 3px 3px 0 #1a1230, 5px 5px 0 rgba(0,0,0,0.25);
+  }
   .subtitle { text-align: center; color: rgba(255,255,255,0.85); font-size: clamp(0.95rem, 3vw, 1.15rem); margin-top: 2px; }
 
   .btn {
@@ -262,6 +269,32 @@
   .group span { font-size: clamp(1.2rem, 4vw, 1.7rem); line-height: 1; }
   @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
   .say-btn { margin-top: 14px; background: var(--yellow); color: #5a3a00; font-size: 1.05rem; padding: 12px 22px; }
+  .trick-btn { margin-top: 14px; margin-left: 8px; background: var(--pink); font-size: 1.05rem; padding: 12px 22px; animation: btnPulseGlow 2.4s ease-in-out infinite; }
+  /* Burbuja de diálogo manga para el truco */
+  .trick-wrap { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; text-align: left; }
+  .trick-pet { font-size: 2.8rem; line-height: 1; animation: petBounce 2s ease-in-out infinite; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.3)); }
+  .speech-bubble {
+    position: relative; flex: 1; background: #fff; color: var(--ink);
+    border: 4px solid #1a1230; border-radius: 18px; padding: 12px 16px;
+    font-weight: 600; font-size: clamp(0.95rem, 3vw, 1.1rem); line-height: 1.35;
+    box-shadow: 5px 5px 0 rgba(26,18,48,0.3);
+    animation: pop 0.25s ease backwards;
+  }
+  .speech-bubble::before {
+    content: ''; position: absolute; left: -18px; top: 22px;
+    border: 10px solid transparent; border-right: 12px solid #1a1230; border-left: 0;
+  }
+  .speech-bubble::after {
+    content: ''; position: absolute; left: -11px; top: 25px;
+    border: 7px solid transparent; border-right: 9px solid #fff; border-left: 0;
+  }
+  .trick-mini {
+    position: absolute; top: 5px; right: 5px; font-size: 1rem;
+    background: #fff0f7; border: 2px solid var(--pink); border-radius: 50%;
+    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+  }
+  .table-card { position: relative; }
+  .group span svg { display: block; }
 
   /* ---------- Tienda ---------- */
   .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-top: 14px; }
@@ -357,10 +390,53 @@
   @keyframes floatFx { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-90px) scale(1.4); } }
   .combo-banner {
     position: fixed; top: 30%; left: 50%; z-index: 60; pointer-events: none;
-    font-size: clamp(2rem, 9vw, 3.4rem); font-weight: 700; color: var(--yellow);
-    text-shadow: 0 4px 0 rgba(0,0,0,0.35), 0 0 24px rgba(255,210,63,0.8);
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 3px;
+    font-size: clamp(2.2rem, 10vw, 3.8rem); color: var(--yellow);
+    -webkit-text-stroke: 2px #1a1230;
+    text-shadow: 4px 4px 0 #1a1230, 0 0 24px rgba(255,210,63,0.8);
+    white-space: nowrap;
     animation: comboPop 0.9s ease-out forwards;
   }
+  /* Estrella de impacto manga */
+  .impact-star {
+    position: fixed; z-index: 80; pointer-events: none;
+    width: 200px; height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle, #fff 8%, var(--yellow) 42%, var(--orange) 100%);
+    clip-path: polygon(50% 0%, 59% 30%, 82% 10%, 71% 38%, 100% 36%, 76% 55%, 96% 78%, 66% 66%, 60% 100%, 47% 71%, 24% 93%, 32% 63%, 2% 62%, 26% 46%, 6% 16%, 37% 32%);
+    animation: impactPop 0.85s ease-out forwards;
+  }
+  .impact-star b {
+    font-family: 'Bangers', cursive; font-weight: 400; font-size: 2.5rem;
+    color: #d63031; -webkit-text-stroke: 1.5px #1a1230; letter-spacing: 2px;
+    transform: rotate(-9deg);
+  }
+  @keyframes impactPop {
+    0%   { transform: translate(-50%,-50%) scale(0.15) rotate(-30deg); opacity: 0; }
+    22%  { transform: translate(-50%,-50%) scale(1.18) rotate(4deg); opacity: 1; }
+    65%  { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(1.3) rotate(6deg); opacity: 0; }
+  }
+  /* Textura de semitono (halftone) manga */
+  .mode-card::after, .results-card::after, .missions-card::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(0,0,0,0.16) 1px, transparent 1.6px);
+    background-size: 9px 9px; opacity: 0.3; border-radius: inherit;
+  }
+  .results-card, .missions-card { position: relative; overflow: hidden; }
+  /* Batalla manga: líneas de velocidad radiales */
+  #screen-boss::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background: repeating-conic-gradient(from 0deg at 50% 26%, rgba(255,255,255,0.1) 0deg 2.5deg, transparent 2.5deg 11deg);
+  }
+  /* Aura oscura de energía del jefe */
+  #boss-emoji { position: relative; }
+  #boss-emoji::before {
+    content: ''; position: absolute; inset: -16px -22px; z-index: -1; border-radius: 50%;
+    background: radial-gradient(circle at 50% 55%, rgba(170,40,230,0.55), rgba(70,0,110,0.3) 55%, transparent 72%);
+    animation: auraPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes auraPulse { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.14); opacity: 1; } }
   @keyframes comboPop {
     0% { transform: translate(-50%,-50%) scale(0.2); opacity: 0; }
     30% { transform: translate(-50%,-50%) scale(1.25); opacity: 1; }
@@ -564,6 +640,11 @@
     <div class="visual-explain" id="learn-explain"></div>
     <div class="groups" id="learn-groups"></div>
     <button class="btn say-btn" onclick="sayOperation()">🔊 Escuchar</button>
+    <button class="btn trick-btn" onclick="sayTrick()">🎧 Truco mágico</button>
+  </div>
+  <div class="trick-wrap" id="trick-wrap" style="display:none;">
+    <span class="trick-pet" id="trick-pet">🦉</span>
+    <div class="speech-bubble" id="trick-text"></div>
   </div>
 </div>
 
@@ -599,6 +680,7 @@
       <span class="reward-chip" id="res-coins">🪙 +0</span>
       <span class="reward-chip" id="res-xp">✨ +0 XP</span>
     </div>
+    <p id="res-farm-note" style="display:none; background:#fff6d8; border:3px solid var(--yellow); border-radius:14px; padding:10px 12px; font-weight:600; color:#8a6200; margin-bottom:10px; font-size:0.95rem;"></p>
     <p id="res-next-goal"></p>
     <button class="btn btn-green" onclick="replayLast()">🔄 ¡Otra vez!</button>
     <button class="btn" onclick="show('menu')">🏠 Menú</button>
@@ -786,6 +868,7 @@ const DEFAULT_STATE = {
   achievements: {},
   bestBlitzStreak: 0,
   tablesPlayed: {},
+  usedQ: {},
 };
 let S = loadState();
 
@@ -794,8 +877,21 @@ function ensureDefaults(st) {
   st.missions = Object.assign({}, DEFAULT_STATE.missions, st.missions || {});
   st.achievements = Object.assign({}, st.achievements || {});
   st.tablesPlayed = Object.assign({}, st.tablesPlayed || {});
+  st.usedQ = Object.assign({}, st.usedQ || {});
   if (typeof st.bestBlitzStreak !== 'number') st.bestBlitzStreak = 0;
   return st;
+}
+
+// ---- Anti-farmeo (a partir de nivel 5 solo progresan las preguntas nuevas) ----
+function antiFarm() { return levelOf(S.xp) >= 5; }
+function markUsed(a, b, g) {
+  const k = Math.min(a, b) + 'x' + Math.max(a, b);
+  g.sTot = (g.sTot || 0) + 1;
+  if (!S.usedQ[k]) { S.usedQ[k] = 1; g.sNew = (g.sNew || 0) + 1; }
+}
+function farmXp(xpBase, g) {
+  if (!antiFarm()) return xpBase;
+  return Math.round(xpBase * (g.sNew || 0) / Math.max(1, g.sTot || 0));
 }
 
 function loadState() {
@@ -914,6 +1010,18 @@ function comboBanner(text) {
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 1000);
 }
+const ONOS = ['¡ZAS!', '¡POW!', '¡BOOM!', '¡PAM!'];
+let onoIdx = 0;
+function impactStar(x, y, text) {
+  const el = document.createElement('div');
+  el.className = 'impact-star';
+  el.innerHTML = '<b></b>';
+  el.querySelector('b').textContent = text || ONOS[onoIdx++ % ONOS.length];
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 900);
+}
 function screenFlash() {
   const el = document.createElement('div');
   el.className = 'screen-flash';
@@ -1017,6 +1125,15 @@ function goPickTable(mode) {
       '<span class="num">Tabla del ' + t + '</span>' +
       '<span class="stars">' + '⭐'.repeat(stars) + '</span>';
     btn.onclick = () => startMode(mode, t);
+    if (mode === 'learn') {
+      const chip = document.createElement('span');
+      chip.className = 'trick-mini';
+      chip.textContent = '🎧';
+      chip.title = 'Truco mágico';
+      const tt = t;
+      chip.onclick = (e) => { e.stopPropagation(); startLearn(tt); sayTrick(); };
+      btn.appendChild(chip);
+    }
     grid.appendChild(btn);
   }
   if (mode === 'boss') {
@@ -1073,7 +1190,7 @@ function startBoss(table) {
   touchDailyStreak();
   if (table > 0) missionTouchTable(table);
   const bossIdx = table === 0 ? Math.floor(Math.random() * BOSSES.length) : (table - 1);
-  boss = { table, hp: BOSS_HP, hearts: 3, coins: 0, locked: false, info: BOSSES[bossIdx], t0: 0 };
+  boss = { table, hp: BOSS_HP, hearts: 3, coins: 0, locked: false, info: BOSSES[bossIdx], t0: 0, sNew: 0, sTot: 0 };
   document.getElementById('boss-name').textContent = boss.info.n + (table === 0 ? ' (¡jefe final!)' : ' — tabla del ' + table);
   document.getElementById('boss-emoji').textContent = boss.info.e;
   document.getElementById('boss-hero').innerHTML = avatarSVG(S.avatar, Math.min(85, Math.max(60, Math.round(window.innerWidth * 0.14))));
@@ -1111,13 +1228,18 @@ function bossAnswer(btn, isCorrect, ev) {
   if (isCorrect) {
     boss.locked = true;
     btn.classList.add('correct');
+    markUsed(boss.q.a, boss.q.b, boss);
     const fast = (boss.deadline - performance.now()) > (BOSS_TIME - 3.5) * 1000;
     const dmg = fast ? 2 : 1;
     boss.hp = Math.max(0, boss.hp - dmg);
     const earned = fast ? 3 : 2;
     boss.coins += earned;
     sfxCorrect();
-    if (fast) comboBanner('⚡ ¡CRÍTICO! -2');
+    if (fast) {
+      const bossEl = document.getElementById('boss-emoji');
+      const br = bossEl.getBoundingClientRect();
+      impactStar(br.left + br.width / 2, br.top + br.height / 2);
+    }
     const be = document.getElementById('boss-emoji');
     be.classList.remove('hit'); void be.offsetWidth; be.classList.add('hit');
     const hero = document.getElementById('boss-hero');
@@ -1150,9 +1272,10 @@ function bossPlayerHit(msg) {
 function bossWin() {
   const stars = boss.hearts;   // 3 corazones = 3 estrellas
   const coins = boss.coins + 15 + boss.hearts * 5;
-  const xp = 40;
-  const newTableUnlocked = boss.table > 0 && !(S.stars[boss.table] >= 1);
-  if (boss.table > 0 && stars > (S.stars[boss.table] || 0)) S.stars[boss.table] = stars;
+  const xp = farmXp(40, boss);
+  const canStar = !antiFarm() || boss.sNew > 0;
+  const newTableUnlocked = canStar && boss.table > 0 && !(S.stars[boss.table] >= 1);
+  if (canStar && boss.table > 0 && stars > (S.stars[boss.table] || 0)) S.stars[boss.table] = stars;
   S.bossesBeaten++;
   addCoins(coins); addXp(xp);
   save();
@@ -1163,20 +1286,22 @@ function bossWin() {
   const r = arena ? arena.getBoundingClientRect() : null;
   burstAt(r ? r.left + r.width / 2 : window.innerWidth / 2, r ? r.top + r.height / 2 : 200, 40);
   checkAchievements();
+  impactStar(window.innerWidth / 2, window.innerHeight * 0.32, '¡KO!');
   showResults({
     emoji: '🏆', title: '¡' + boss.info.n + ' derrotado!',
     detail: S.pet + ' está orgulloso de ti' + (newTableUnlocked ? ' — ¡nueva tabla abierta en el mapa! 🗺️' : ''),
-    stars, coins, xp,
+    stars, coins, xp, farm: antiFarm() && xp < 40,
   });
 }
 function bossLose() {
   const coins = boss.coins;
-  addCoins(coins); addXp(10);
+  const xp = farmXp(10, boss);
+  addCoins(coins); addXp(xp);
   sfxLose();
   showResults({
     emoji: '💪', title: '¡Casi lo tenías!',
     detail: boss.info.n + ' escapó… ¡vuelve a intentarlo!',
-    stars: 0, coins, xp: 10,
+    stars: 0, coins, xp, farm: antiFarm() && xp < 10,
   });
 }
 
@@ -1187,7 +1312,7 @@ let blitz = null;
 function startBlitz() {
   lastGame = startBlitz;
   touchDailyStreak();
-  blitz = { score: 0, streak: 0, coins: 0, locked: false, end: performance.now() + BLITZ_SECONDS * 1000 };
+  blitz = { score: 0, streak: 0, coins: 0, locked: false, end: performance.now() + BLITZ_SECONDS * 1000, sNew: 0, sTot: 0 };
   blitzNextQuestion();
   blitzPaint();
   document.getElementById('blitz-combo').textContent = '';
@@ -1216,6 +1341,7 @@ function blitzAnswer(btn, isCorrect, ev) {
   if (isCorrect) {
     blitz.locked = true;
     btn.classList.add('correct');
+    markUsed(blitz.q.a, blitz.q.b, blitz);
     blitz.score++;
     blitz.streak++;
     if (blitz.streak > S.bestBlitzStreak) { S.bestBlitzStreak = blitz.streak; save(); }
@@ -1244,15 +1370,16 @@ function blitzEnd() {
   clearTimers();
   const isRecord = blitz.score > S.bestBlitz;
   if (isRecord) S.bestBlitz = blitz.score;
-  const xp = blitz.score * 2;
+  const xpBase = blitz.score * 2;
+  const xp = farmXp(xpBase, blitz);
   addCoins(blitz.coins); addXp(xp);
-  if (isRecord && blitz.score > 0) { sfxWin(); burstAt(window.innerWidth / 2, 160, 40); } else { sfxCoin(); }
+  if (isRecord && blitz.score > 0) { sfxWin(); burstAt(window.innerWidth / 2, 160, 40); impactStar(window.innerWidth / 2, window.innerHeight * 0.32, '¡BOOM!'); } else { sfxCoin(); }
   checkAchievements();
   showResults({
     emoji: isRecord && blitz.score > 0 ? '🚀' : '⚡',
     title: isRecord && blitz.score > 0 ? '¡NUEVO RÉCORD!' : '¡Se acabó el tiempo!',
     detail: 'Has acertado ' + blitz.score + ' multiplicaciones en 1 minuto' + (isRecord ? '' : ' (récord: ' + S.bestBlitz + ')'),
-    stars: -1, coins: blitz.coins, xp,
+    stars: -1, coins: blitz.coins, xp, farm: antiFarm() && xp < xpBase,
   });
 }
 
@@ -1265,11 +1392,11 @@ function startMemory(table) {
   const ns = [1,2,3,4,5,6,7,8,9,10].sort(() => Math.random() - 0.5).slice(0, 6);
   const cards = [];
   ns.forEach((n, i) => {
-    cards.push({ pair: i, text: table + ' × ' + n, isOp: true });
-    cards.push({ pair: i, text: String(table * n), isOp: false });
+    cards.push({ pair: i, n, text: table + ' × ' + n, isOp: true });
+    cards.push({ pair: i, n, text: String(table * n), isOp: false });
   });
   cards.sort(() => Math.random() - 0.5);
-  mem = { table, cards, open: [], found: 0, moves: 0, locked: false };
+  mem = { table, cards, open: [], found: 0, moves: 0, locked: false, sNew: 0, sTot: 0 };
   const grid = document.getElementById('memory-grid');
   grid.innerHTML = '';
   cards.forEach((c, idx) => {
@@ -1299,6 +1426,7 @@ function memFlip(idx, btn) {
   mem.open = [];
   if (mem.cards[a.idx].pair === mem.cards[b.idx].pair && a.idx !== b.idx) {
     a.btn.classList.add('matched'); b.btn.classList.add('matched');
+    markUsed(mem.table, mem.cards[a.idx].n, mem);
     mem.found++;
     sfxCorrect();
     memPaint();
@@ -1315,9 +1443,11 @@ function memFlip(idx, btn) {
 function memWin() {
   const coins = Math.max(10, 40 - (mem.moves - 6) * 3);
   const stars = mem.moves <= 8 ? 3 : mem.moves <= 11 ? 2 : 1;
-  if (stars > (S.stars[mem.table] || 0)) S.stars[mem.table] = stars;
+  const xp = farmXp(25, mem);
+  const canStar = !antiFarm() || mem.sNew > 0;
+  if (canStar && stars > (S.stars[mem.table] || 0)) S.stars[mem.table] = stars;
   S.boards++;
-  addCoins(coins); addXp(25);
+  addCoins(coins); addXp(xp);
   save();
   missionProgress('memory_board', 1);
   sfxWin();
@@ -1328,7 +1458,7 @@ function memWin() {
   showResults({
     emoji: '🧠', title: '¡Tablero completado!',
     detail: 'Tabla del ' + mem.table + ' en ' + mem.moves + ' intentos',
-    stars, coins, xp: 25,
+    stars, coins, xp, farm: antiFarm() && xp < 25,
   });
 }
 
@@ -1338,6 +1468,7 @@ function startLearn(table) {
   currentTable = table;
   learnIndex = 1;
   missionTouchTable(table);
+  document.getElementById('trick-wrap').style.display = 'none';
   renderLearn();
   show('learn');
 }
@@ -1347,6 +1478,23 @@ function learnStep(dir) {
   if (learnIndex > 10) learnIndex = 1;
   sfxFlip();
   renderLearn();
+}
+// Mini-iconos SVG estilo manga para los grupos de conteo (uno por tabla)
+const MINI_INK = '#1a1230';
+const MINI = {
+  1: '<path d="M16,8 C9,3 3.5,9 4.5,16 C5.5,23.5 11,29 16,27.5 C21,29 26.5,23.5 27.5,16 C28.5,9 23,3 16,8 Z" fill="#ff4d4d" stroke="' + MINI_INK + '" stroke-width="1.8"/><path d="M16,8 Q15.5,4 18.5,2.5" stroke="#7a4a21" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="21" cy="4.5" rx="3.5" ry="2" fill="#2ee6a8" stroke="' + MINI_INK + '" stroke-width="1.4" transform="rotate(20 21 4.5)"/><ellipse cx="10.5" cy="12.5" rx="2.2" ry="3.6" fill="rgba(255,255,255,0.75)" transform="rotate(-22 10.5 12.5)"/>',
+  2: '<circle cx="16" cy="17" r="11" fill="#ffd23f" stroke="' + MINI_INK + '" stroke-width="1.8"/><path d="M13,5.5 Q16,2 19,5.5" stroke="' + MINI_INK + '" stroke-width="1.6" fill="none"/><circle cx="12" cy="15" r="1.7" fill="' + MINI_INK + '"/><circle cx="20" cy="15" r="1.7" fill="' + MINI_INK + '"/><circle cx="12.6" cy="14.4" r="0.6" fill="#fff"/><circle cx="20.6" cy="14.4" r="0.6" fill="#fff"/><polygon points="13.5,18 18.5,18 16,21.5" fill="#ff9f43" stroke="' + MINI_INK + '" stroke-width="1.3"/><circle cx="9" cy="19" r="1.6" fill="rgba(255,120,140,0.55)"/><circle cx="23" cy="19" r="1.6" fill="rgba(255,120,140,0.55)"/>',
+  3: '<path d="M16,29 C8,24.5 4.5,17 5.5,12 Q10.5,8.5 16,10.5 Q21.5,8.5 26.5,12 C27.5,17 24,24.5 16,29 Z" fill="#ff4d6d" stroke="' + MINI_INK + '" stroke-width="1.8"/><polygon points="16,3 20,7 16,11 12,7" fill="#2ee6a8" stroke="' + MINI_INK + '" stroke-width="1.4"/><ellipse cx="11" cy="15" rx="0.9" ry="1.3" fill="#fff"/><ellipse cx="16" cy="19" rx="0.9" ry="1.3" fill="#fff"/><ellipse cx="21" cy="15" rx="0.9" ry="1.3" fill="#fff"/><ellipse cx="10" cy="13" rx="1.6" ry="2.4" fill="rgba(255,255,255,0.55)" transform="rotate(-20 10 13)"/>',
+  4: '<path d="M3,20 L5.5,14 Q6.5,11 10,11 L22,11 Q25.5,11 26.5,14 L29,20 Q29,23 26,23 L6,23 Q3,23 3,20 Z" fill="#4dc9ff" stroke="' + MINI_INK + '" stroke-width="1.8"/><path d="M9,14.5 L11,11.8 L15,11.8 L15,14.5 Z" fill="#eaf7ff" stroke="' + MINI_INK + '" stroke-width="1.2"/><path d="M17,14.5 L17,11.8 L21,11.8 L23,14.5 Z" fill="#eaf7ff" stroke="' + MINI_INK + '" stroke-width="1.2"/><circle cx="9.5" cy="23" r="3.4" fill="' + MINI_INK + '"/><circle cx="9.5" cy="23" r="1.4" fill="#cfd6e4"/><circle cx="22.5" cy="23" r="3.4" fill="' + MINI_INK + '"/><circle cx="22.5" cy="23" r="1.4" fill="#cfd6e4"/>',
+  5: '<polygon points="16,2.5 20,11.5 30,12.5 22.5,19 24.7,29 16,23.7 7.3,29 9.5,19 2,12.5 12,11.5" fill="#ffd23f" stroke="' + MINI_INK + '" stroke-width="1.8" stroke-linejoin="round"/><circle cx="13" cy="15" r="1.3" fill="' + MINI_INK + '"/><circle cx="19" cy="15" r="1.3" fill="' + MINI_INK + '"/><path d="M13.5,18.5 Q16,21 18.5,18.5" stroke="' + MINI_INK + '" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="9.5" cy="10" r="1.5" fill="rgba(255,255,255,0.8)"/>',
+  6: '<circle cx="16" cy="18" r="11" fill="#ff4d4d" stroke="' + MINI_INK + '" stroke-width="1.8"/><line x1="16" y1="7" x2="16" y2="29" stroke="' + MINI_INK + '" stroke-width="1.6"/><circle cx="10.5" cy="14" r="2.1" fill="' + MINI_INK + '"/><circle cx="21.5" cy="14" r="2.1" fill="' + MINI_INK + '"/><circle cx="10" cy="22" r="2.1" fill="' + MINI_INK + '"/><circle cx="22" cy="22" r="2.1" fill="' + MINI_INK + '"/><circle cx="16" cy="6" r="4" fill="' + MINI_INK + '"/><circle cx="14.4" cy="5.4" r="1" fill="#fff"/><circle cx="17.6" cy="5.4" r="1" fill="#fff"/>',
+  7: '<path d="M4,25 A12,12 0 0 1 28,25" stroke="#ff4d4d" stroke-width="3.2" fill="none"/><path d="M7.5,25 A8.5,8.5 0 0 1 24.5,25" stroke="#ffd23f" stroke-width="3.2" fill="none"/><path d="M11,25 A5,5 0 0 1 21,25" stroke="#4dc9ff" stroke-width="3.2" fill="none"/><circle cx="5" cy="25" r="3.4" fill="#fff" stroke="' + MINI_INK + '" stroke-width="1.5"/><circle cx="27" cy="25" r="3.4" fill="#fff" stroke="' + MINI_INK + '" stroke-width="1.5"/>',
+  8: '<path d="M6,14 a10,10 0 0 1 20,0 l0,6 q0,2.5 -2.5,2.5 l-15,0 Q6,22.5 6,20 Z" fill="#a55eea" stroke="' + MINI_INK + '" stroke-width="1.8"/><circle cx="7.5" cy="26" r="2.6" fill="#a55eea" stroke="' + MINI_INK + '" stroke-width="1.5"/><circle cx="13.2" cy="27.5" r="2.6" fill="#a55eea" stroke="' + MINI_INK + '" stroke-width="1.5"/><circle cx="18.8" cy="27.5" r="2.6" fill="#a55eea" stroke="' + MINI_INK + '" stroke-width="1.5"/><circle cx="24.5" cy="26" r="2.6" fill="#a55eea" stroke="' + MINI_INK + '" stroke-width="1.5"/><circle cx="12" cy="13" r="1.7" fill="' + MINI_INK + '"/><circle cx="20" cy="13" r="1.7" fill="' + MINI_INK + '"/><circle cx="12.6" cy="12.4" r="0.6" fill="#fff"/><circle cx="20.6" cy="12.4" r="0.6" fill="#fff"/><path d="M13.5,16.5 Q16,19 18.5,16.5" stroke="' + MINI_INK + '" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+  9: '<ellipse cx="16" cy="12" rx="9" ry="10.5" fill="#ff5fa2" stroke="' + MINI_INK + '" stroke-width="1.8"/><polygon points="14,22 18,22 16,25" fill="#ff5fa2" stroke="' + MINI_INK + '" stroke-width="1.3"/><path d="M16,25 Q13,28 16,30.5" stroke="' + MINI_INK + '" stroke-width="1.4" fill="none"/><ellipse cx="11.5" cy="7.5" rx="2.4" ry="3.6" fill="rgba(255,255,255,0.75)" transform="rotate(-18 11.5 7.5)"/>',
+  10: '<circle cx="16" cy="16" r="12" fill="#e8a25f" stroke="' + MINI_INK + '" stroke-width="1.8"/><circle cx="16" cy="16" r="11" fill="#ff8fab"/><circle cx="16" cy="16" r="4.6" fill="#fdf1e0" stroke="' + MINI_INK + '" stroke-width="1.6"/><rect x="9" y="10" width="3" height="1.5" rx="0.7" fill="#2ee6a8" transform="rotate(24 10.5 10.7)"/><rect x="20" y="9" width="3" height="1.5" rx="0.7" fill="#ffd23f" transform="rotate(-30 21.5 9.7)"/><rect x="23" y="19" width="3" height="1.5" rx="0.7" fill="#4dc9ff" transform="rotate(40 24.5 19.7)"/><rect x="7" y="20" width="3" height="1.5" rx="0.7" fill="#fff" transform="rotate(-25 8.5 20.7)"/>',
+};
+function miniIcon(t) {
+  return '<svg viewBox="0 0 32 32" width="1em" height="1em">' + MINI[t] + '</svg>';
 }
 function renderLearn() {
   const t = currentTable, n = learnIndex, r = t * n;
@@ -1362,7 +1510,7 @@ function renderLearn() {
     g.style.animationDelay = (i * 0.08) + 's';
     for (let j = 0; j < n; j++) {
       const s = document.createElement('span');
-      s.textContent = EMOJIS[t];
+      s.innerHTML = miniIcon(t);
       g.appendChild(s);
     }
     box.appendChild(g);
@@ -1375,83 +1523,154 @@ function sayOperation() {
   speechSynthesis.cancel(); speechSynthesis.speak(msg);
 }
 
+// ==================== TRUCOS MÁGICOS POR TABLA ====================
+const TRICKS = {
+  1: 'La tabla del 1 es mágica: ¡el número se queda igual! 1 por 7 es 7, y 1 por 9 es 9. No hay que calcular nada.',
+  2: 'Multiplicar por 2 es hacer el DOBLE: el número más él mismo. 2 por 6 es 6 más 6, ¡que son 12!',
+  3: 'Para la tabla del 3, cuenta de 3 en 3 dando saltitos: 3, 6, 9, 12, 15… Para 3 por 4 das cuatro saltos: 3, 6, 9, ¡y 12!',
+  4: 'Multiplicar por 4 es doblar dos veces: ¡el doble del doble! Para 4 por 6: el doble de 6 es 12, y el doble de 12 es 24.',
+  5: 'La tabla del 5 siempre acaba en 0 o en 5: 5, 10, 15, 20, 25… Si tu resultado no acaba en 0 o en 5, ¡revísalo!',
+  6: 'Truco del 6 con números pares: el resultado acaba en el mismo número. 6 por 4 es 24, que acaba en 4. Y 6 por 8 es 48, que acaba en 8. ¡Qué pasada!',
+  7: 'La del 7 parece la más difícil, pero solo tienes que aprenderte dos: 7 por 7 es 49 y 7 por 8 es 56. ¡El resto ya te los sabes por las otras tablas!',
+  8: 'Para multiplicar por 8: doble, doble, ¡y doble otra vez! Para 8 por 3: el doble de 3 es 6, el doble de 6 es 12, y el doble de 12 es 24.',
+  9: 'El truco de los dedos: abre las dos manos y baja el dedo del número que multiplicas. Para 9 por 3, baja el dedo número 3: quedan 2 dedos a un lado y 7 al otro. ¡27! Y fíjate: las cifras del resultado siempre suman 9.',
+  10: 'La tabla del 10 es la más fácil del mundo: añade un 0 al final del número. 10 por 7 es 70, y 10 por 9 es 90. ¡Ya está!',
+};
+function sayTrick() {
+  const txt = TRICKS[currentTable] || '';
+  document.getElementById('trick-pet').textContent = S.pet;
+  document.getElementById('trick-text').textContent = txt;
+  document.getElementById('trick-wrap').style.display = 'flex';
+  if ('speechSynthesis' in window) {
+    const msg = new SpeechSynthesisUtterance('Truco mágico de la tabla del ' + currentTable + '. ' + txt);
+    msg.lang = 'es-ES'; msg.rate = 0.85;
+    speechSynthesis.cancel(); speechSynthesis.speak(msg);
+  }
+}
+
 // ==================== PERSONAJE (estilo Mii) ====================
 const SKINS = ['#ffdfc4', '#f0c8a0', '#dda775', '#b07b4f', '#8d5524'];
 const HAIR_COLORS = ['#3b2f2f', '#6b4226', '#e8c56b', '#e0662b', '#8854d0', '#2e86de'];
 const SHIRTS = ['#ff6b6b', '#ff9f43', '#ffd23f', '#2ee6a8', '#4dc9ff', '#a55eea'];
-const HAIR_NAMES = ['Nada', 'Corto', 'De punta', 'Largo', 'Rizado', 'Coleta'];
+const HAIR_NAMES = ['Nada', 'Corto', 'De punta', 'Largo', 'Rizado', 'Coleta', 'Despeinado', 'Moño samurái'];
 const EYE_NAMES = ['Puntos', 'Felices', 'Grandes', 'Guiño', 'Chispas'];
 const MOUTH_NAMES = ['Sonrisa', 'Risa', 'Lengua', 'Sorpresa'];
-const ACC_NAMES = ['Nada', 'Gafas', 'De sol', 'Gorra', 'Corona', 'Lazo'];
+const ACC_NAMES = ['Nada', 'Gafas', 'De sol', 'Gorra', 'Corona', 'Lazo', 'Sombrero de paja', 'Cinta ninja'];
+const INK = '#1a1230';
 
+// Pelo estilo shōnen: mechones afilados y contorno grueso
 function hairSvg(style, c) {
-  const cap = '<path d="M20.2,52 A30,30 0 0 1 79.8,52 Z" fill="' + c + '"/>';
+  const o = '" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/>';
+  const cap = '<path d="M20.2,52 A30,30 0 0 1 79.8,52 Z" fill="' + c + o;
+  const fringe = '<path d="M22,50 L28,41 L33,49 L39,39 L45,48 L50,38 L56,48 L62,39 L68,49 L73,41 L78,50 Z" fill="' + c + o;
   switch (style) {
-    case 1: return cap;
-    case 2: return cap +
-      '<polygon points="30,34 35,15 41,30" fill="' + c + '"/>' +
-      '<polygon points="44,28 50,11 56,28" fill="' + c + '"/>' +
-      '<polygon points="59,30 65,15 70,34" fill="' + c + '"/>';
-    case 3: return cap +
-      '<path d="M21,48 Q13,78 17,93 L33,93 Q26,70 26,52 Z" fill="' + c + '"/>' +
-      '<path d="M79,48 Q87,78 83,93 L67,93 Q74,70 74,52 Z" fill="' + c + '"/>';
+    case 1: return cap + fringe;
+    case 2: return '<path d="M26,42 L18,17 L33,31 L36,7 L45,27 L50,3 L55,27 L64,7 L67,31 L82,17 L74,42 Z" fill="' + c + o + cap + fringe;
+    case 3: return cap + fringe +
+      '<path d="M21,48 Q11,78 15,94 L23,83 L27,94 Q33,72 27,52 Z" fill="' + c + o +
+      '<path d="M79,48 Q89,78 85,94 L77,83 L73,94 Q67,72 73,52 Z" fill="' + c + o;
     case 4: return cap +
-      '<circle cx="27" cy="37" r="9" fill="' + c + '"/><circle cx="39" cy="28" r="10" fill="' + c + '"/>' +
-      '<circle cx="51" cy="25" r="10" fill="' + c + '"/><circle cx="63" cy="28" r="10" fill="' + c + '"/>' +
-      '<circle cx="74" cy="37" r="9" fill="' + c + '"/>';
-    case 5: return cap + '<circle cx="50" cy="17" r="9" fill="' + c + '"/><circle cx="50" cy="17" r="4" fill="rgba(0,0,0,0.15)"/>';
+      '<circle cx="27" cy="37" r="9" fill="' + c + '" stroke="' + INK + '" stroke-width="2"/><circle cx="39" cy="28" r="10" fill="' + c + '" stroke="' + INK + '" stroke-width="2"/>' +
+      '<circle cx="51" cy="25" r="10" fill="' + c + '" stroke="' + INK + '" stroke-width="2"/><circle cx="63" cy="28" r="10" fill="' + c + '" stroke="' + INK + '" stroke-width="2"/>' +
+      '<circle cx="74" cy="37" r="9" fill="' + c + '" stroke="' + INK + '" stroke-width="2"/>' + cap.replace(o, '"/>');
+    case 5: return '<path d="M44,22 L34,4 L48,13 L50,2 L52,13 L66,4 L56,22 Z" fill="' + c + o + cap + fringe +
+      '<rect x="43" y="19" width="14" height="5" rx="2.5" fill="#d63031" stroke="' + INK + '" stroke-width="1.6"/>';
+    case 6: return '<path d="M24,44 L10,32 L27,35 L22,13 L37,29 L40,5 L50,27 L58,7 L61,29 L75,15 L72,35 L90,30 L76,44 Z" fill="' + c + o + cap +
+      '<path d="M22,50 L30,40 L36,49 L43,38 L50,47 L57,38 L64,49 L70,40 L78,50 Z" fill="' + c + o;
+    case 7: return cap +
+      '<path d="M42,23 L37,7 L50,13 L63,7 L58,23 Z" fill="' + c + o +
+      '<rect x="41" y="20" width="18" height="5.5" rx="2.7" fill="' + c + '" stroke="' + INK + '" stroke-width="1.8"/>' +
+      '<rect x="43.5" y="20.6" width="13" height="4.2" rx="2.1" fill="#d63031"/>';
     default: return '';
   }
 }
+// Ojos grandes estilo anime: brillo blanco, iris y pestañas
+function animeEye(x, iris) {
+  return '<path d="M' + (x-8) + ',45 Q' + x + ',40.5 ' + (x+8) + ',45" stroke="' + INK + '" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+    '<path d="M' + (x+7) + ',44.6 L' + (x+10.5) + ',41.8" stroke="' + INK + '" stroke-width="2.2" stroke-linecap="round"/>' +
+    '<ellipse cx="' + x + '" cy="54" rx="7" ry="8.4" fill="#fff" stroke="' + INK + '" stroke-width="1.9"/>' +
+    '<ellipse cx="' + x + '" cy="55" rx="4" ry="5.8" fill="' + iris + '"/>' +
+    '<ellipse cx="' + x + '" cy="56.5" rx="2" ry="3.1" fill="' + INK + '"/>' +
+    '<circle cx="' + (x-2) + '" cy="51.5" r="2.1" fill="#fff"/>' +
+    '<circle cx="' + (x+1.9) + '" cy="58" r="1.1" fill="#fff" opacity="0.9"/>';
+}
+function winkEye(x) {
+  return '<path d="M' + (x-7) + ',52 Q' + x + ',57.5 ' + (x+7) + ',52" stroke="' + INK + '" stroke-width="3.2" fill="none" stroke-linecap="round"/>' +
+    '<path d="M' + (x+6) + ',52.5 L' + (x+9.5) + ',50" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>';
+}
 function eyesSvg(style) {
-  const ink = '#2d2154';
   switch (style) {
-    case 1: return '<path d="M32,54 Q38,46 44,54" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
-                   '<path d="M56,54 Q62,46 68,54" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
-    case 2: return '<circle cx="38" cy="52" r="7" fill="#fff" stroke="' + ink + '" stroke-width="1.6"/><circle cx="39.5" cy="53" r="3.4" fill="' + ink + '"/>' +
-                   '<circle cx="62" cy="52" r="7" fill="#fff" stroke="' + ink + '" stroke-width="1.6"/><circle cx="60.5" cy="53" r="3.4" fill="' + ink + '"/>';
-    case 3: return '<circle cx="38" cy="52" r="3.6" fill="' + ink + '"/>' +
-                   '<path d="M56,52 Q62,47 68,52" stroke="' + ink + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>';
+    case 1: return '<path d="M31,54 Q38,45.5 45,54" stroke="' + INK + '" stroke-width="3.6" fill="none" stroke-linecap="round"/>' +
+                   '<path d="M55,54 Q62,45.5 69,54" stroke="' + INK + '" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+    case 2: return animeEyeBig(38) + animeEyeBig(62);
+    case 3: return animeEye(38, '#3a6fd8') + winkEye(62);
     case 4: return sparkle(38, 52) + sparkle(62, 52);
-    default: return '<circle cx="38" cy="52" r="3.6" fill="' + ink + '"/><circle cx="62" cy="52" r="3.6" fill="' + ink + '"/>';
+    default: return animeEye(38, '#8a5a2b') + animeEye(62, '#8a5a2b');
   }
 }
-function sparkle(x, y) {
-  return '<path d="M' + x + ',' + (y-7) + ' L' + (x+2.5) + ',' + (y-2) + ' L' + (x+7) + ',' + y + ' L' + (x+2.5) + ',' + (y+2) +
-    ' L' + x + ',' + (y+7) + ' L' + (x-2.5) + ',' + (y+2) + ' L' + (x-7) + ',' + y + ' L' + (x-2.5) + ',' + (y-2) + ' Z" fill="#f6b93b"/>';
+function animeEyeBig(x) {
+  return '<path d="M' + (x-9) + ',43.5 Q' + x + ',38.5 ' + (x+9) + ',43.5" stroke="' + INK + '" stroke-width="2.8" fill="none" stroke-linecap="round"/>' +
+    '<path d="M' + (x+8) + ',43 L' + (x+12) + ',39.8" stroke="' + INK + '" stroke-width="2.3" stroke-linecap="round"/>' +
+    '<ellipse cx="' + x + '" cy="54" rx="8.4" ry="9.8" fill="#fff" stroke="' + INK + '" stroke-width="2"/>' +
+    '<ellipse cx="' + x + '" cy="55.5" rx="5" ry="6.8" fill="#7c4dff"/>' +
+    '<ellipse cx="' + x + '" cy="57" rx="2.5" ry="3.6" fill="' + INK + '"/>' +
+    '<circle cx="' + (x-2.4) + '" cy="51" r="2.5" fill="#fff"/>' +
+    '<circle cx="' + (x+2.2) + '" cy="59" r="1.3" fill="#fff" opacity="0.9"/>';
 }
+function sparkle(x, y) {
+  return '<path d="M' + x + ',' + (y-8) + ' L' + (x+2.8) + ',' + (y-2.2) + ' L' + (x+8) + ',' + y + ' L' + (x+2.8) + ',' + (y+2.2) +
+    ' L' + x + ',' + (y+8) + ' L' + (x-2.8) + ',' + (y+2.2) + ' L' + (x-8) + ',' + y + ' L' + (x-2.8) + ',' + (y-2.2) +
+    ' Z" fill="#f6b93b" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+    '<circle cx="' + (x-1.5) + '" cy="' + (y-2) + '" r="1.4" fill="#fff"/>';
+}
+// Boquitas expresivas manga
 function mouthSvg(style) {
-  const ink = '#2d2154';
   switch (style) {
-    case 1: return '<path d="M38,64 Q50,83 62,64 Z" fill="#7a3b4b"/><rect x="41" y="64.5" width="18" height="4" rx="2" fill="#fff"/>';
-    case 2: return '<path d="M40,65 Q50,76 60,65" stroke="' + ink + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>' +
-                   '<ellipse cx="53" cy="72" rx="5" ry="4" fill="#ff8fab"/>';
-    case 3: return '<ellipse cx="50" cy="69" rx="5" ry="6.5" fill="#7a3b4b"/>';
-    default: return '<path d="M40,65 Q50,77 60,65" stroke="' + ink + '" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
+    case 1: return '<path d="M37,63 Q50,84 63,63 Z" fill="#7a2b3f" stroke="' + INK + '" stroke-width="2.4" stroke-linejoin="round"/>' +
+                   '<rect x="41" y="64" width="18" height="4" rx="2" fill="#fff"/>' +
+                   '<ellipse cx="50" cy="74" rx="5.5" ry="3" fill="#ff8fab"/>';
+    case 2: return '<path d="M40,65 Q50,75 60,65" stroke="' + INK + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
+                   '<path d="M48,70 Q53,79 58,70 Q53,73 48,70 Z" fill="#ff8fab" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>';
+    case 3: return '<ellipse cx="50" cy="69" rx="5" ry="6.5" fill="#7a2b3f" stroke="' + INK + '" stroke-width="2.2"/>' +
+                   '<ellipse cx="50" cy="71.5" rx="2.6" ry="2.4" fill="#ff8fab"/>';
+    default: return '<path d="M39,64.5 Q50,77 61,64.5" stroke="' + INK + '" stroke-width="3.6" fill="none" stroke-linecap="round"/>' +
+                    '<path d="M61,64.5 L63.5,62.8" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>' +
+                    '<path d="M39,64.5 L36.5,62.8" stroke="' + INK + '" stroke-width="2.4" stroke-linecap="round"/>';
   }
 }
 function accSvg(style) {
-  const ink = '#2d2154';
   switch (style) {
-    case 1: return '<circle cx="38" cy="52" r="9.5" fill="none" stroke="' + ink + '" stroke-width="2.6"/>' +
-                   '<circle cx="62" cy="52" r="9.5" fill="none" stroke="' + ink + '" stroke-width="2.6"/>' +
-                   '<line x1="47.5" y1="52" x2="52.5" y2="52" stroke="' + ink + '" stroke-width="2.6"/>';
-    case 2: return '<circle cx="38" cy="52" r="9.5" fill="' + ink + '"/><circle cx="62" cy="52" r="9.5" fill="' + ink + '"/>' +
-                   '<line x1="47.5" y1="52" x2="52.5" y2="52" stroke="' + ink + '" stroke-width="3"/>';
-    case 3: return '<path d="M23,40 A28,21 0 0 1 77,40 L77,45 L23,45 Z" fill="#d63031"/>' +
-                   '<path d="M60,39 L88,39 Q91,45 84,46.5 L60,45 Z" fill="#b02525"/>';
-    case 4: return '<path d="M30,30 L36,15 L44,26 L50,10 L56,26 L64,15 L70,30 Z" fill="#ffd23f" stroke="#e8b70e" stroke-width="1.5"/>';
-    case 5: return '<circle cx="67" cy="27" r="3.5" fill="#ff5fa2"/>' +
-                   '<path d="M67,27 L56,20 L59,33 Z" fill="#ff5fa2"/><path d="M67,27 L78,20 L75,33 Z" fill="#ff5fa2"/>';
+    case 1: return '<circle cx="38" cy="53" r="10.5" fill="rgba(120,200,255,0.16)" stroke="' + INK + '" stroke-width="2.8"/>' +
+                   '<circle cx="62" cy="53" r="10.5" fill="rgba(120,200,255,0.16)" stroke="' + INK + '" stroke-width="2.8"/>' +
+                   '<line x1="48.5" y1="53" x2="51.5" y2="53" stroke="' + INK + '" stroke-width="2.8"/>';
+    case 2: return '<circle cx="38" cy="52" r="9.5" fill="' + INK + '"/><circle cx="62" cy="52" r="9.5" fill="' + INK + '"/>' +
+                   '<line x1="47.5" y1="52" x2="52.5" y2="52" stroke="' + INK + '" stroke-width="3"/>' +
+                   '<circle cx="35" cy="49" r="2.4" fill="rgba(255,255,255,0.55)"/><circle cx="59" cy="49" r="2.4" fill="rgba(255,255,255,0.55)"/>';
+    case 3: return '<path d="M23,40 A28,21 0 0 1 77,40 L77,45 L23,45 Z" fill="#d63031" stroke="' + INK + '" stroke-width="2"/>' +
+                   '<path d="M60,39 L88,39 Q91,45 84,46.5 L60,45 Z" fill="#b02525" stroke="' + INK + '" stroke-width="1.6"/>';
+    case 4: return '<path d="M30,30 L36,15 L44,26 L50,10 L56,26 L64,15 L70,30 Z" fill="#ffd23f" stroke="' + INK + '" stroke-width="2" stroke-linejoin="round"/>' +
+                   '<circle cx="50" cy="21" r="2.2" fill="#ff5fa2"/><circle cx="38" cy="24" r="1.8" fill="#4dc9ff"/><circle cx="62" cy="24" r="1.8" fill="#2ee6a8"/>';
+    case 5: return '<circle cx="67" cy="27" r="3.5" fill="#ff5fa2" stroke="' + INK + '" stroke-width="1.6"/>' +
+                   '<path d="M67,27 L56,20 L59,33 Z" fill="#ff5fa2" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>' +
+                   '<path d="M67,27 L78,20 L75,33 Z" fill="#ff5fa2" stroke="' + INK + '" stroke-width="1.6" stroke-linejoin="round"/>';
+    case 6: return '<path d="M31,33 Q31,12 50,12 Q69,12 69,33 Z" fill="#f6dd8a" stroke="' + INK + '" stroke-width="2"/>' +
+                   '<path d="M32,27 Q50,32 68,27 L68,33 Q50,37 32,33 Z" fill="#d63031" stroke="' + INK + '" stroke-width="1.6"/>' +
+                   '<ellipse cx="50" cy="34" rx="33" ry="7.5" fill="#f2cf66" stroke="' + INK + '" stroke-width="2"/>' +
+                   '<path d="M22,32 Q50,26.5 78,32" stroke="rgba(0,0,0,0.18)" stroke-width="1.6" fill="none"/>';
+    case 7: return '<rect x="21" y="37" width="58" height="9" rx="3.5" fill="#2d3d8f" stroke="' + INK + '" stroke-width="2"/>' +
+                   '<rect x="41" y="35" width="18" height="12.5" rx="2.5" fill="#c8cdd8" stroke="' + INK + '" stroke-width="2"/>' +
+                   '<circle cx="50" cy="41.2" r="2.6" fill="none" stroke="' + INK + '" stroke-width="1.6"/>' +
+                   '<path d="M78,40 L94,35 L90,47 Z" fill="#2d3d8f" stroke="' + INK + '" stroke-width="1.8" stroke-linejoin="round"/>';
     default: return '';
   }
 }
 function avatarSVG(av, size) {
   return '<svg viewBox="0 0 100 120" width="' + size + '" height="' + Math.round(size * 1.2) + '" style="vertical-align:bottom;">' +
-    '<path d="M24,120 Q24,86 50,86 Q76,86 76,120 Z" fill="' + SHIRTS[av.shirt] + '"/>' +
-    '<circle cx="50" cy="55" r="30" fill="' + SKINS[av.skin] + '"/>' +
+    '<path d="M24,120 Q24,86 50,86 Q76,86 76,120 Z" fill="' + SHIRTS[av.shirt] + '" stroke="' + INK + '" stroke-width="2.4"/>' +
+    '<circle cx="50" cy="55" r="30" fill="' + SKINS[av.skin] + '" stroke="' + INK + '" stroke-width="2.6"/>' +
+    '<path d="M27,70 Q50,85 73,70 Q50,79 27,70 Z" fill="rgba(0,0,0,0.09)"/>' +
     hairSvg(av.hair, HAIR_COLORS[av.hairC]) +
-    '<circle cx="34" cy="62" r="4" fill="rgba(255,105,140,0.35)"/><circle cx="66" cy="62" r="4" fill="rgba(255,105,140,0.35)"/>' +
+    '<circle cx="33" cy="63" r="4.2" fill="rgba(255,105,140,0.4)"/><circle cx="67" cy="63" r="4.2" fill="rgba(255,105,140,0.4)"/>' +
     eyesSvg(av.eyes) +
     mouthSvg(av.mouth) +
     accSvg(av.acc) +
@@ -1654,6 +1873,9 @@ function showResults(r) {
   document.getElementById('res-stars').textContent = r.stars > 0 ? '⭐'.repeat(r.stars) : (r.stars === 0 ? '🌟 ¡La próxima vez!' : '');
   document.getElementById('res-coins').textContent = '🪙 +' + r.coins;
   document.getElementById('res-xp').textContent = '✨ +' + r.xp + ' XP';
+  const farmNote = document.getElementById('res-farm-note');
+  farmNote.style.display = r.farm ? 'block' : 'none';
+  if (r.farm) farmNote.textContent = '🌟 ¡Ya te sabes ' + (r.xp === 0 ? 'todas' : 'casi todas') + ' estas preguntas! Juega con otras tablas para seguir subiendo de nivel.';
   const next = PETS.find(p => !S.pets.includes(p.e));
   document.getElementById('res-next-goal').textContent = next
     ? (S.coins >= next.price ? '🛍️ ¡Ya puedes adoptar a ' + next.n + ' ' + next.e + '!' : next.e + ' ' + next.n + ': te faltan ' + (next.price - S.coins) + ' 🪙')
