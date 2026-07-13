@@ -21,7 +21,8 @@
     --orange: #ff9f43;
     --red: #ff6b6b;
     --blue: #4dc9ff;
-    --shadow: 0 8px 0 rgba(0,0,0,0.22);
+    --tinta: #1a1230;
+    --shadow: 4px 5px 0 var(--tinta);
   }
 
   html, body {
@@ -33,6 +34,34 @@
     overflow-x: hidden;
     touch-action: manipulation;
     user-select: none;
+  }
+
+  /* Fondo manga: ráfagas de velocidad en esquinas + trama de puntos */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      repeating-conic-gradient(from 160deg at -4% -6%, rgba(255,255,255,0.09) 0deg 1.4deg, transparent 1.4deg 9deg),
+      repeating-conic-gradient(from -20deg at 104% 106%, rgba(255,255,255,0.07) 0deg 1.4deg, transparent 1.4deg 9deg);
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1.1px, transparent 1.8px);
+    background-size: 15px 15px;
+  }
+  /* Decoración manga fija: estrella de impacto y nube */
+  .deco {
+    position: fixed; z-index: 0; pointer-events: none; opacity: 0.16;
+  }
+  .deco-star {
+    width: 130px; height: 130px; background: #fff;
+    clip-path: polygon(50% 0%, 59% 30%, 82% 10%, 71% 38%, 100% 36%, 76% 55%, 96% 78%, 66% 66%, 60% 100%, 47% 71%, 24% 93%, 32% 63%, 2% 62%, 26% 46%, 6% 16%, 37% 32%);
+    top: 12%; right: -34px; transform: rotate(14deg);
+  }
+  .deco-cloud {
+    bottom: 7%; left: -20px; width: 190px; height: 58px; background: #fff;
+    border-radius: 40px;
+    box-shadow: 40px -26px 0 -6px #fff, 95px -18px 0 -2px #fff, 130px -30px 0 -12px #fff;
+    opacity: 0.12;
   }
 
   /* Burbujas flotantes de fondo */
@@ -58,17 +87,22 @@
     align-items: center;
     gap: 8px;
     padding: 10px 14px;
-    background: rgba(30, 18, 70, 0.85);
+    background: rgba(30, 18, 70, 0.88);
     backdrop-filter: blur(6px);
     color: #fff;
+    border-bottom: 3px solid var(--tinta);
+    box-shadow: 0 4px 0 rgba(26,18,48,0.35);
   }
   .hud-chip {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255,255,255,0.14);
+    background: #fff;
+    color: var(--ink);
+    border: 2.5px solid var(--tinta);
+    box-shadow: 2px 2px 0 var(--tinta);
     border-radius: 30px;
-    padding: 6px 12px;
+    padding: 4px 12px;
     font-weight: 700;
     font-size: clamp(0.85rem, 2.8vw, 1.05rem);
     white-space: nowrap;
@@ -76,16 +110,23 @@
   .level-badge {
     background: linear-gradient(135deg, var(--yellow), var(--orange));
     color: #5a3a00;
+    border: 2.5px solid var(--tinta);
+    box-shadow: 2px 2px 0 var(--tinta);
     border-radius: 30px;
-    padding: 6px 12px;
+    padding: 4px 12px;
     font-weight: 700;
     font-size: clamp(0.85rem, 2.8vw, 1.05rem);
     white-space: nowrap;
   }
   #xp-wrap { flex: 1; min-width: 50px; }
-  #xp-bar { height: 12px; background: rgba(255,255,255,0.18); border-radius: 8px; overflow: hidden; }
-  #xp-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--green)); border-radius: 8px; transition: width 0.5s; }
-  #btn-sound { background: rgba(255,255,255,0.14); border: none; border-radius: 50%; width: 38px; height: 38px; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+  #xp-bar { height: 14px; background: rgba(255,255,255,0.2); border-radius: 8px; overflow: hidden; border: 2px solid var(--tinta); }
+  #xp-fill {
+    height: 100%; width: 0%; border-radius: 6px; transition: width 0.5s;
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.3) 0 5px, transparent 5px 10px),
+      linear-gradient(90deg, var(--blue), var(--green));
+  }
+  #btn-sound { background: #fff; border: 2.5px solid var(--tinta); box-shadow: 2px 2px 0 var(--tinta); border-radius: 50%; width: 38px; height: 38px; font-size: 1.05rem; cursor: pointer; flex-shrink: 0; }
 
   /* ---------- Pantallas ---------- */
   .screen {
@@ -110,8 +151,8 @@
   .subtitle { text-align: center; color: rgba(255,255,255,0.85); font-size: clamp(0.95rem, 3vw, 1.15rem); margin-top: 2px; }
 
   .btn {
-    border: none;
-    border-radius: 18px;
+    border: 3px solid var(--tinta);
+    border-radius: 14px;
     cursor: pointer;
     font-family: inherit;
     font-weight: 700;
@@ -120,8 +161,8 @@
     box-shadow: var(--shadow);
     transition: transform 0.08s, box-shadow 0.08s, filter 0.15s;
   }
-  .btn:active { transform: translateY(5px); box-shadow: 0 2px 0 rgba(0,0,0,0.22); }
-  .btn-back { background: rgba(255,255,255,0.22); font-size: 1rem; padding: 10px 20px; align-self: flex-start; margin-bottom: 10px; }
+  .btn:active { transform: translate(3px, 4px); box-shadow: 1px 1px 0 var(--tinta); }
+  .btn-back { background: #fff; color: var(--ink); font-size: 1rem; padding: 10px 20px; align-self: flex-start; margin-bottom: 10px; }
 
   /* ---------- Menú: mascota + tarjetas de juego ---------- */
   #home-pet {
@@ -140,25 +181,33 @@
   .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
   @media (min-width: 720px) { .mode-grid { grid-template-columns: repeat(4, 1fr); } }
   .mode-card {
-    border: none;
-    border-radius: 24px;
+    border: 3.5px solid var(--tinta);
+    border-radius: 14px;
     padding: 18px 12px 14px;
     text-align: center;
     cursor: pointer;
     font-family: inherit;
     color: #fff;
-    box-shadow: var(--shadow);
+    box-shadow: 5px 6px 0 var(--tinta);
     transition: transform 0.08s;
     position: relative;
     overflow: hidden;
   }
-  .mode-card:active { transform: scale(0.96); }
-  .mode-card .icon { font-size: clamp(2.4rem, 8vw, 3.2rem); display: block; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25)); }
-  .mode-card .name { font-size: clamp(1.05rem, 3.4vw, 1.3rem); font-weight: 700; display: block; margin-top: 6px; }
+  /* Viñetas de manga ligeramente giradas */
+  .mode-grid .mode-card:nth-child(odd)  { transform: rotate(-1deg); }
+  .mode-grid .mode-card:nth-child(even) { transform: rotate(1deg); }
+  .mode-card:active { transform: scale(0.96) rotate(0deg); box-shadow: 2px 2px 0 var(--tinta); }
+  .mode-card .icon { font-size: clamp(2.4rem, 8vw, 3.2rem); display: block; filter: drop-shadow(2px 3px 0 rgba(26,18,48,0.45)); }
+  .mode-card .name {
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1.5px;
+    font-size: clamp(1.2rem, 4vw, 1.5rem); display: block; margin-top: 6px;
+    text-shadow: 2px 2px 0 rgba(26,18,48,0.55);
+  }
   .mode-card .desc { font-size: clamp(0.75rem, 2.4vw, 0.9rem); opacity: 0.92; display: block; margin-top: 3px; font-weight: 400; }
   .mode-card .best { display: inline-block; margin-top: 8px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 3px 10px; font-size: 0.8rem; }
   .mc-boss   { background: linear-gradient(145deg, #ff6b6b, #d63031); }
   .mc-blitz  { background: linear-gradient(145deg, #ffd23f, #ff9f43); color: #5a3a00; }
+  .mc-blitz .name { text-shadow: 2px 2px 0 rgba(255,255,255,0.55); }
   .mc-blitz .best { background: rgba(255,255,255,0.45); }
   .mc-memory { background: linear-gradient(145deg, #4dc9ff, #2e86de); }
   .mc-learn  { background: linear-gradient(145deg, #2ee6a8, #10ac84); }
@@ -171,50 +220,88 @@
   /* ---------- Selector de tabla ---------- */
   .table-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 14px; }
   .table-card {
-    background: var(--card); border: none; border-radius: 20px; padding: 14px 6px;
-    text-align: center; cursor: pointer; box-shadow: var(--shadow); font-family: inherit;
+    background: var(--card); border: 3px solid var(--tinta); border-radius: 12px; padding: 14px 6px;
+    text-align: center; cursor: pointer; box-shadow: 4px 5px 0 var(--tinta); font-family: inherit;
     transition: transform 0.08s;
   }
-  .table-card:active { transform: scale(0.94); }
-  .table-card .emoji { font-size: 2.3rem; display: block; }
-  .table-card .num { font-size: 1.2rem; font-weight: 700; color: var(--purple-dark); display: block; margin-top: 4px; }
+  .table-grid .table-card:nth-child(odd)  { transform: rotate(-0.8deg); }
+  .table-grid .table-card:nth-child(even) { transform: rotate(0.8deg); }
+  .table-card:active { transform: scale(0.94) rotate(0deg); box-shadow: 1px 2px 0 var(--tinta); }
+  .table-card .emoji { font-size: 2.3rem; display: block; filter: drop-shadow(2px 2px 0 rgba(26,18,48,0.25)); }
+  .table-card .num {
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1px;
+    font-size: 1.3rem; color: var(--purple-dark); display: block; margin-top: 4px;
+  }
   .table-card .stars { font-size: 0.85rem; margin-top: 2px; display: block; min-height: 1.1em; }
   .table-card.mix { background: linear-gradient(145deg, #ffd23f, #ff9f43); }
   .table-card.mix .num { color: #5a3a00; }
 
   /* ---------- Zona de juego común ---------- */
   .game-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .pill { background: rgba(255,255,255,0.92); border-radius: 30px; padding: 8px 16px; font-weight: 700; font-size: clamp(0.95rem, 3vw, 1.2rem); box-shadow: 0 4px 0 rgba(0,0,0,0.18); }
+  .pill { background: #fff; border: 3px solid var(--tinta); border-radius: 30px; padding: 6px 16px; font-weight: 700; font-size: clamp(0.95rem, 3vw, 1.2rem); box-shadow: 3px 3px 0 var(--tinta); }
 
   .question-big {
     text-align: center;
-    font-size: clamp(2.2rem, 9vw, 3.6rem);
-    font-weight: 700;
+    font-family: 'Bangers', 'Fredoka', cursive;
+    font-weight: 400;
+    letter-spacing: 4px;
+    font-size: clamp(2.4rem, 10vw, 4rem);
     color: var(--ink);
     background: var(--card);
-    border-radius: 22px;
-    padding: 16px;
-    box-shadow: var(--shadow);
+    border: 4px solid var(--tinta);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 6px 6px 0 var(--tinta);
     margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
   }
-  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: auto; padding-bottom: 8px; }
+  .question-big::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image: radial-gradient(rgba(124,77,255,0.14) 1px, transparent 1.6px);
+    background-size: 10px 10px; border-radius: inherit;
+  }
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: auto; padding-bottom: 8px; }
   @media (min-width: 700px) { .answers { grid-template-columns: repeat(4, 1fr); } }
-  .answer-btn { font-size: clamp(1.5rem, 6vw, 2.2rem); padding: 20px; background: var(--purple); }
+  .answer-btn {
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 3px;
+    font-size: clamp(1.8rem, 7vw, 2.6rem); padding: 16px; background: var(--purple);
+  }
   .answer-btn.correct { background: var(--green-dark); animation: pulse 0.4s; }
   .answer-btn.wrong { background: var(--red); animation: shake 0.4s; }
   @keyframes pulse { 50% { transform: scale(1.12); } }
   @keyframes shake { 25% { transform: translateX(-9px); } 75% { transform: translateX(9px); } }
 
-  .timer-track { height: 16px; background: rgba(255,255,255,0.25); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
-  .timer-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--green), var(--yellow)); border-radius: 10px; transition: width 0.1s linear; }
-  .timer-fill.danger { background: var(--red); }
+  .timer-track { height: 18px; background: rgba(255,255,255,0.25); border-radius: 10px; overflow: hidden; margin-bottom: 12px; border: 2.5px solid var(--tinta); }
+  .timer-fill {
+    height: 100%; width: 100%; border-radius: 7px; transition: width 0.1s linear;
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px),
+      linear-gradient(90deg, var(--green), var(--yellow));
+  }
+  .timer-fill.danger {
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.3) 0 6px, transparent 6px 12px),
+      var(--red);
+  }
 
   /* ---------- Batalla de jefes ---------- */
-  #boss-arena { text-align: center; margin-bottom: 8px; }
+  /* Gran viñeta de manga para la zona del jefe */
+  #boss-arena {
+    text-align: center; margin-bottom: 10px; position: relative;
+    background:
+      repeating-conic-gradient(from 0deg at 50% 42%, rgba(255,255,255,0.14) 0deg 2deg, transparent 2deg 12deg),
+      linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+    border: 4px solid var(--tinta);
+    border-radius: 10px;
+    box-shadow: 6px 6px 0 rgba(26,18,48,0.55);
+    padding: 8px 8px 14px;
+    overflow: hidden;
+  }
   #boss-emoji {
     font-size: clamp(4rem, 16vw, 6.5rem);
     display: inline-block;
-    filter: drop-shadow(0 8px 10px rgba(0,0,0,0.35));
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(3px 4px 0 rgba(26,18,48,0.55));
     animation: bossFloat 2.6s ease-in-out infinite;
   }
   @keyframes bossFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -222,16 +309,42 @@
   @keyframes bossHit { 20% { transform: translateX(-14px) rotate(-8deg); filter: brightness(2) drop-shadow(0 0 12px #fff); } 60% { transform: translateX(10px) rotate(6deg); } }
   #boss-emoji.attack { animation: bossAttack 0.5s; }
   @keyframes bossAttack { 30% { transform: scale(1.35) translateY(12px); } }
-  .hp-track { max-width: 340px; height: 20px; margin: 6px auto 0; background: rgba(0,0,0,0.3); border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,0.4); }
-  .hp-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #ff6b6b, #d63031); transition: width 0.35s; border-radius: 10px; }
-  #boss-name { color: #fff; font-weight: 700; font-size: clamp(1rem, 3.4vw, 1.25rem); text-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+  .hp-track { max-width: 340px; height: 20px; margin: 8px auto 0; background: rgba(0,0,0,0.35); border-radius: 12px; overflow: hidden; border: 2.5px solid var(--tinta); box-shadow: 0 0 0 2px rgba(255,255,255,0.45); }
+  .hp-fill {
+    height: 100%; width: 100%; transition: width 0.35s; border-radius: 9px;
+    background:
+      repeating-linear-gradient(-45deg, rgba(255,255,255,0.25) 0 6px, transparent 6px 12px),
+      linear-gradient(90deg, #ff6b6b, #d63031);
+  }
+  /* Nombre del jefe como cartel de "título de capítulo" */
+  #boss-name {
+    display: inline-block;
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 2px;
+    color: #fff; background: var(--tinta);
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    padding: 4px 18px; margin: 2px 0 4px;
+    transform: rotate(-2deg);
+    border: 2.5px solid #fff;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.45);
+  }
 
   /* ---------- Rayo (blitz) ---------- */
   #blitz-combo {
     text-align: center; font-size: clamp(1.1rem, 4vw, 1.5rem); font-weight: 700;
-    color: var(--yellow); min-height: 1.6em; text-shadow: 0 2px 0 rgba(0,0,0,0.35);
+    color: var(--yellow); min-height: 1.9em; text-shadow: 0 2px 0 rgba(0,0,0,0.35);
   }
-  #blitz-rocket-track { position: relative; height: 46px; background: rgba(255,255,255,0.14); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  /* Marco de energía estilo aura de poder para el combo */
+  #blitz-combo.power {
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 2.5px;
+    color: #5a3a00; text-shadow: none;
+    width: fit-content; margin: 0 auto 6px; padding: 2px 16px;
+    background: linear-gradient(180deg, #fff6c8, var(--yellow));
+    border: 3px solid var(--tinta); border-radius: 10px;
+    box-shadow: 3px 3px 0 var(--tinta), 0 0 16px rgba(255,210,63,0.95);
+    transform: rotate(-1.5deg);
+    animation: auraPulse 0.9s ease-in-out infinite;
+  }
+  #blitz-rocket-track { position: relative; height: 46px; background: repeating-linear-gradient(90deg, rgba(255,255,255,0.16) 0 18px, rgba(255,255,255,0.08) 18px 36px); border: 3px solid var(--tinta); box-shadow: 3px 3px 0 rgba(26,18,48,0.5); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
   #blitz-rocket { position: absolute; left: 0; top: 4px; font-size: 2rem; transition: left 0.4s ease; }
 
   /* ---------- Memoria ---------- */
@@ -239,15 +352,22 @@
   @media (min-width: 600px) { #memory-grid { grid-template-columns: repeat(6, 1fr); } }
   .mem-card {
     aspect-ratio: 3 / 3.6;
-    border: none; border-radius: 14px; cursor: pointer; font-family: inherit;
+    border: 3px solid var(--tinta); border-radius: 12px; cursor: pointer; font-family: inherit;
     font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 700;
-    background: linear-gradient(145deg, var(--purple), var(--purple-dark));
-    color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,0.22);
+    background:
+      radial-gradient(rgba(255,255,255,0.16) 1.4px, transparent 2px),
+      linear-gradient(145deg, var(--purple), var(--purple-dark));
+    background-size: 11px 11px, 100% 100%;
+    color: #fff; box-shadow: 3px 4px 0 var(--tinta);
     transition: transform 0.2s;
   }
-  .mem-card .back { font-size: clamp(1.5rem, 5vw, 2rem); }
-  .mem-card.flipped { background: var(--card); color: var(--ink); transform: rotateY(180deg) scaleX(-1); }
-  .mem-card.matched { background: var(--green); color: #fff; transform: scale(0.94); cursor: default; opacity: 0.85; }
+  .mem-card .back { font-size: clamp(1.5rem, 5vw, 2rem); filter: drop-shadow(1.5px 2px 0 rgba(26,18,48,0.35)); }
+  .mem-card.flipped {
+    background: var(--card); color: var(--ink); transform: rotateY(180deg) scaleX(-1);
+    font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1.5px;
+    font-size: clamp(1.15rem, 4.5vw, 1.7rem);
+  }
+  .mem-card.matched { background: var(--green); color: #fff; transform: scale(0.94); cursor: default; opacity: 0.9; font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1.5px; }
 
   /* ---------- Aprender ---------- */
   .learn-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; }
@@ -432,8 +552,12 @@
   /* Aura oscura de energía del jefe */
   #boss-emoji { position: relative; }
   #boss-emoji::before {
-    content: ''; position: absolute; inset: -16px -22px; z-index: -1; border-radius: 50%;
-    background: radial-gradient(circle at 50% 55%, rgba(170,40,230,0.55), rgba(70,0,110,0.3) 55%, transparent 72%);
+    content: ''; position: absolute; inset: -22px -30px; z-index: -1; border-radius: 50%;
+    background:
+      repeating-conic-gradient(rgba(255,255,255,0.35) 0deg 5deg, transparent 5deg 17deg),
+      radial-gradient(circle at 50% 55%, rgba(170,40,230,0.6), rgba(70,0,110,0.35) 55%, transparent 72%);
+    -webkit-mask-image: radial-gradient(circle, #000 40%, transparent 70%);
+    mask-image: radial-gradient(circle, #000 40%, transparent 70%);
     animation: auraPulse 1.6s ease-in-out infinite;
   }
   @keyframes auraPulse { 0%,100% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.14); opacity: 1; } }
@@ -887,12 +1011,30 @@ function antiFarm() { return levelOf(S.xp) >= 5; }
 function markUsed(a, b, g) {
   const k = Math.min(a, b) + 'x' + Math.max(a, b);
   g.sTot = (g.sTot || 0) + 1;
-  if (!S.usedQ[k]) { S.usedQ[k] = 1; g.sNew = (g.sNew || 0) + 1; }
+  S.usedQ[k] = (S.usedQ[k] || 0) + 1;
+  if (S.usedQ[k] === 1) g.sNew = (g.sNew || 0) + 1;
+}
+// Cuántas veces se ha acertado ya esta pregunta antes de esta partida (0 = nunca vista)
+function timesSeenBefore(a, b) {
+  const k = Math.min(a, b) + 'x' + Math.max(a, b);
+  return S.usedQ[k] || 0;
+}
+// Factor de recompensa por repetición: 1ª vez 100%, luego decae hasta un mínimo, SIEMPRE (no solo nivel 5+)
+function repeatFactor(a, b) {
+  const seen = timesSeenBefore(a, b);
+  if (seen <= 0) return 1;
+  return Math.max(0.15, 1 - seen * 0.2);
 }
 function farmXp(xpBase, g) {
   if (!antiFarm()) return xpBase;
   return Math.round(xpBase * (g.sNew || 0) / Math.max(1, g.sTot || 0));
 }
+// Penalización por fallar una pregunta de opción múltiple: coste fijo en monedas + rompe cualquier racha
+function applyMistakePenalty(g) {
+  g.mistakes = (g.mistakes || 0) + 1;
+  g.coinPenalty = (g.coinPenalty || 0) + MISTAKE_COIN_PENALTY;
+}
+const MISTAKE_COIN_PENALTY = 2;
 
 function loadState() {
   try {
@@ -1228,11 +1370,12 @@ function bossAnswer(btn, isCorrect, ev) {
   if (isCorrect) {
     boss.locked = true;
     btn.classList.add('correct');
+    const rf = repeatFactor(boss.q.a, boss.q.b);
     markUsed(boss.q.a, boss.q.b, boss);
     const fast = (boss.deadline - performance.now()) > (BOSS_TIME - 3.5) * 1000;
     const dmg = fast ? 2 : 1;
     boss.hp = Math.max(0, boss.hp - dmg);
-    const earned = fast ? 3 : 2;
+    const earned = Math.max(1, Math.round((fast ? 3 : 2) * rf));
     boss.coins += earned;
     sfxCorrect();
     if (fast) {
@@ -1250,7 +1393,11 @@ function bossAnswer(btn, isCorrect, ev) {
     else { addTimer(setTimeout(bossNextQuestion, 700)); }
   } else {
     btn.classList.add('wrong');
-    btn.disabled = true;
+    document.querySelectorAll('#boss-answers .answer-btn').forEach(b => {
+      b.disabled = true;
+      if (parseInt(b.textContent) === boss.q.a * boss.q.b) b.classList.add('correct');
+    });
+    applyMistakePenalty(boss);
     bossPlayerHit('❌ ¡Ay!');
   }
 }
@@ -1271,7 +1418,7 @@ function bossPlayerHit(msg) {
 }
 function bossWin() {
   const stars = boss.hearts;   // 3 corazones = 3 estrellas
-  const coins = boss.coins + 15 + boss.hearts * 5;
+  const coins = Math.max(0, boss.coins + 15 + boss.hearts * 5 - (boss.coinPenalty || 0));
   const xp = farmXp(40, boss);
   const canStar = !antiFarm() || boss.sNew > 0;
   const newTableUnlocked = canStar && boss.table > 0 && !(S.stars[boss.table] >= 1);
@@ -1290,18 +1437,18 @@ function bossWin() {
   showResults({
     emoji: '🏆', title: '¡' + boss.info.n + ' derrotado!',
     detail: S.pet + ' está orgulloso de ti' + (newTableUnlocked ? ' — ¡nueva tabla abierta en el mapa! 🗺️' : ''),
-    stars, coins, xp, farm: antiFarm() && xp < 40,
+    stars, coins, xp, farm: antiFarm() && xp < 40, mistakes: boss.mistakes || 0,
   });
 }
 function bossLose() {
-  const coins = boss.coins;
+  const coins = Math.max(0, boss.coins - (boss.coinPenalty || 0));
   const xp = farmXp(10, boss);
   addCoins(coins); addXp(xp);
   sfxLose();
   showResults({
     emoji: '💪', title: '¡Casi lo tenías!',
     detail: boss.info.n + ' escapó… ¡vuelve a intentarlo!',
-    stars: 0, coins, xp, farm: antiFarm() && xp < 10,
+    stars: 0, coins, xp, farm: antiFarm() && xp < 10, mistakes: boss.mistakes || 0,
   });
 }
 
@@ -1338,14 +1485,15 @@ function blitzNextQuestion() {
 }
 function blitzAnswer(btn, isCorrect, ev) {
   if (blitz.locked) return;
+  blitz.locked = true;
   if (isCorrect) {
-    blitz.locked = true;
     btn.classList.add('correct');
+    const rf = repeatFactor(blitz.q.a, blitz.q.b);
     markUsed(blitz.q.a, blitz.q.b, blitz);
     blitz.score++;
     blitz.streak++;
     if (blitz.streak > S.bestBlitzStreak) { S.bestBlitzStreak = blitz.streak; save(); }
-    const mult = Math.min(5, 1 + Math.floor(blitz.streak / 3));
+    const mult = Math.max(1, Math.round(Math.min(5, 1 + Math.floor(blitz.streak / 3)) * rf));
     blitz.coins += mult;
     sfxCorrect();
     missionProgress('blitz_15', 1);
@@ -1360,10 +1508,17 @@ function blitzAnswer(btn, isCorrect, ev) {
     addTimer(setTimeout(blitzNextQuestion, 350));
   } else {
     btn.classList.add('wrong');
-    btn.disabled = true;
+    document.querySelectorAll('#blitz-answers .answer-btn').forEach(b => {
+      b.disabled = true;
+      if (parseInt(b.textContent) === blitz.q.a * blitz.q.b) b.classList.add('correct');
+    });
+    applyMistakePenalty(blitz);
     blitz.streak = 0;
+    blitz.coins = Math.max(0, blitz.coins - MISTAKE_COIN_PENALTY);
     document.getElementById('blitz-combo').textContent = '';
+    blitzPaint();
     sfxWrong();
+    addTimer(setTimeout(blitzNextQuestion, 700));
   }
 }
 function blitzEnd() {
@@ -1379,7 +1534,7 @@ function blitzEnd() {
     emoji: isRecord && blitz.score > 0 ? '🚀' : '⚡',
     title: isRecord && blitz.score > 0 ? '¡NUEVO RÉCORD!' : '¡Se acabó el tiempo!',
     detail: 'Has acertado ' + blitz.score + ' multiplicaciones en 1 minuto' + (isRecord ? '' : ' (récord: ' + S.bestBlitz + ')'),
-    stars: -1, coins: blitz.coins, xp, farm: antiFarm() && xp < xpBase,
+    stars: -1, coins: blitz.coins, xp, farm: antiFarm() && xp < xpBase, mistakes: blitz.mistakes || 0,
   });
 }
 
@@ -1874,8 +2029,15 @@ function showResults(r) {
   document.getElementById('res-coins').textContent = '🪙 +' + r.coins;
   document.getElementById('res-xp').textContent = '✨ +' + r.xp + ' XP';
   const farmNote = document.getElementById('res-farm-note');
-  farmNote.style.display = r.farm ? 'block' : 'none';
-  if (r.farm) farmNote.textContent = '🌟 ¡Ya te sabes ' + (r.xp === 0 ? 'todas' : 'casi todas') + ' estas preguntas! Juega con otras tablas para seguir subiendo de nivel.';
+  if (r.farm) {
+    farmNote.style.display = 'block';
+    farmNote.textContent = '🌟 ¡Ya te sabes ' + (r.xp === 0 ? 'todas' : 'casi todas') + ' estas preguntas! Juega con otras tablas para seguir subiendo de nivel.';
+  } else if (r.mistakes > 0) {
+    farmNote.style.display = 'block';
+    farmNote.textContent = '🤔 Fallaste ' + r.mistakes + (r.mistakes === 1 ? ' pregunta' : ' preguntas') + ': ¡piensa bien antes de tocar la respuesta!';
+  } else {
+    farmNote.style.display = 'none';
+  }
   const next = PETS.find(p => !S.pets.includes(p.e));
   document.getElementById('res-next-goal').textContent = next
     ? (S.coins >= next.price ? '🛍️ ¡Ya puedes adoptar a ' + next.n + ' ' + next.e + '!' : next.e + ' ' + next.n + ': te faltan ' + (next.price - S.coins) + ' 🪙')
