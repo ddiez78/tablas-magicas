@@ -42,12 +42,16 @@
     background:
       repeating-conic-gradient(from 160deg at -4% -6%, rgba(255,255,255,0.09) 0deg 1.4deg, transparent 1.4deg 9deg),
       repeating-conic-gradient(from -20deg at 104% 106%, rgba(255,255,255,0.07) 0deg 1.4deg, transparent 1.4deg 9deg);
+    animation: mangaDrift 18s ease-in-out infinite alternate;
   }
   body::after {
     content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background-image: radial-gradient(rgba(255,255,255,0.06) 1.1px, transparent 1.8px);
     background-size: 15px 15px;
+    animation: dotsDrift 24s linear infinite;
   }
+  @keyframes mangaDrift { from { transform: translate3d(-1%, -1%, 0) scale(1.02); } to { transform: translate3d(1%, 1%, 0) scale(1.06); } }
+  @keyframes dotsDrift { to { background-position: 30px 22px; } }
   /* Decoración manga fija: estrella de impacto y nube */
   .deco {
     position: fixed; z-index: 0; pointer-events: none; opacity: 0.16;
@@ -106,7 +110,9 @@
     font-weight: 700;
     font-size: clamp(0.85rem, 2.8vw, 1.05rem);
     white-space: nowrap;
+    animation: hudBob 3.8s ease-in-out infinite;
   }
+  @keyframes hudBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
   .level-badge {
     background: linear-gradient(135deg, var(--yellow), var(--orange));
     color: #5a3a00;
@@ -125,7 +131,10 @@
     background:
       repeating-linear-gradient(-45deg, rgba(255,255,255,0.3) 0 5px, transparent 5px 10px),
       linear-gradient(90deg, var(--blue), var(--green));
+    background-size: 20px 100%, 100% 100%;
+    animation: xpShimmer 1.4s linear infinite;
   }
+  @keyframes xpShimmer { to { background-position: 20px 0, 0 0; } }
   #btn-sound { background: #fff; border: 2.5px solid var(--tinta); box-shadow: 2px 2px 0 var(--tinta); border-radius: 50%; width: 38px; height: 38px; font-size: 1.05rem; cursor: pointer; flex-shrink: 0; }
 
   /* ---------- Pantallas ---------- */
@@ -192,11 +201,31 @@
     transition: transform 0.08s;
     position: relative;
     overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+    animation: cardEntrance 0.55s cubic-bezier(.2,.8,.2,1) backwards;
   }
+  .mode-card::before, .table-card::before, .pet-card::before {
+    content: ''; position: absolute; inset: -40% -65%; pointer-events: none;
+    background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,0.34) 50%, transparent 58%);
+    transform: translateX(-70%) rotate(8deg); transition: transform 0.7s ease;
+  }
+  .mode-card:hover::before, .table-card:hover::before, .pet-card:hover::before { transform: translateX(70%) rotate(8deg); }
+  @keyframes cardEntrance { from { opacity: 0; transform: translateY(18px) scale(.94) rotate(0); } to { opacity: 1; } }
+  .mode-card:nth-child(1) { animation-delay: .04s; }
+  .mode-card:nth-child(2) { animation-delay: .08s; }
+  .mode-card:nth-child(3) { animation-delay: .12s; }
+  .mode-card:nth-child(4) { animation-delay: .16s; }
+  .mode-card:nth-child(5) { animation-delay: .20s; }
+  .mode-card:nth-child(6) { animation-delay: .24s; }
+  .mode-card:nth-child(7) { animation-delay: .28s; }
   /* Viñetas de manga ligeramente giradas */
   .mode-grid .mode-card:nth-child(odd)  { transform: rotate(-1deg); }
   .mode-grid .mode-card:nth-child(even) { transform: rotate(1deg); }
   .mode-card:active { transform: scale(0.96) rotate(0deg); box-shadow: 2px 2px 0 var(--tinta); }
+  .mode-card:hover { transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-8px) scale(1.02); box-shadow: 7px 10px 0 var(--tinta), 0 0 22px rgba(255,255,255,0.18); }
+  .mode-card:hover .icon { animation: iconWiggle .55s ease; }
+  @keyframes iconWiggle { 25% { transform: rotate(-10deg) scale(1.08); } 65% { transform: rotate(8deg) scale(1.12); } }
   .mode-card .icon { font-size: clamp(2.4rem, 8vw, 3.2rem); display: block; filter: drop-shadow(2px 3px 0 rgba(26,18,48,0.45)); }
   .mode-card .name {
     font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1.5px;
@@ -222,11 +251,14 @@
   .table-card {
     background: var(--card); border: 3px solid var(--tinta); border-radius: 12px; padding: 14px 6px;
     text-align: center; cursor: pointer; box-shadow: 4px 5px 0 var(--tinta); font-family: inherit;
-    transition: transform 0.08s;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    position: relative; overflow: hidden; transform-style: preserve-3d; will-change: transform;
   }
   .table-grid .table-card:nth-child(odd)  { transform: rotate(-0.8deg); }
   .table-grid .table-card:nth-child(even) { transform: rotate(0.8deg); }
   .table-card:active { transform: scale(0.94) rotate(0deg); box-shadow: 1px 2px 0 var(--tinta); }
+  .table-card:hover { transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-6px) scale(1.03); box-shadow: 6px 8px 0 var(--tinta), 0 0 18px rgba(255,210,63,0.34); }
+  .table-card:hover .emoji { animation: iconWiggle .55s ease; }
   .table-card .emoji { font-size: 2.3rem; display: block; filter: drop-shadow(2px 2px 0 rgba(26,18,48,0.25)); }
   .table-card .num {
     font-family: 'Bangers', 'Fredoka', cursive; font-weight: 400; letter-spacing: 1px;
@@ -255,7 +287,9 @@
     margin-bottom: 12px;
     position: relative;
     overflow: hidden;
+    animation: questionArrive .45s cubic-bezier(.2,.9,.25,1.15) both;
   }
+  @keyframes questionArrive { from { opacity: 0; transform: translateY(12px) rotate(-1.5deg) scale(.96); } to { opacity: 1; transform: none; } }
   .question-big::after {
     content: ''; position: absolute; inset: 0; pointer-events: none;
     background-image: radial-gradient(rgba(124,77,255,0.14) 1px, transparent 1.6px);
@@ -440,7 +474,11 @@
   .pet-card {
     background: var(--card); border-radius: 14px; padding: 16px 10px; text-align: center;
     box-shadow: 5px 5px 0 var(--tinta); border: 3.5px solid var(--tinta);
+    position: relative; overflow: hidden; transform-style: preserve-3d; transition: transform .18s ease, box-shadow .18s ease;
   }
+  .pet-card:hover { transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-6px) scale(1.03); box-shadow: 7px 9px 0 var(--tinta), 0 0 18px rgba(124,77,255,0.28); }
+  .pet-card:hover .pet { animation: petHop .55s ease; }
+  @keyframes petHop { 45% { transform: translateY(-10px) rotate(-7deg) scale(1.1); } }
   .pet-card.selected { border-color: var(--green-dark); box-shadow: 5px 5px 0 var(--green-dark); }
   .pet-card .pet { font-size: 3rem; display: block; filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(2px 3px 0 rgba(26,18,48,0.4)); }
   .pet-card .pet-name { font-weight: 700; margin-top: 6px; display: block; }
@@ -457,7 +495,9 @@
   .results-card .big-emoji {
     font-size: 4.6rem; animation: petBounce 1.6s infinite; display: inline-block;
     filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff) drop-shadow(3px 4px 0 rgba(26,18,48,0.4));
+    animation: resultHero 1.8s ease-in-out infinite;
   }
+  @keyframes resultHero { 0%,100% { transform: translateY(0) rotate(-4deg) scale(1); } 50% { transform: translateY(-12px) rotate(4deg) scale(1.08); } }
   /* Cartel de cierre de capítulo manga: ¡VICTORIA! / ¡CONTINUARÁ...! */
   .chapter-banner {
     display: inline-block; background: var(--tinta); color: #fff;
@@ -681,6 +721,15 @@
   .adv-node .a-stars { position: absolute; bottom: -18px; font-size: 0.7rem; white-space: nowrap; color: #fff; text-shadow: 0 1px 0 rgba(0,0,0,0.4); }
   .adv-lock-icon { position: absolute; top: -4px; right: -4px; font-size: 1rem; }
   .adv-goal-note { text-align: center; color: rgba(255,255,255,0.85); font-size: 0.85rem; margin-top: 4px; }
+
+  /* Microinteracciones de alto feedback */
+  .tap-ripple { position: absolute; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.7); pointer-events: none; transform: translate(-50%,-50%) scale(0); animation: ripple .55s ease-out forwards; z-index: 4; }
+  @keyframes ripple { to { transform: translate(-50%,-50%) scale(12); opacity: 0; } }
+  .ambient-spark { position: fixed; z-index: 0; pointer-events: none; color: rgba(255,255,255,.72); font-size: var(--spark-size); left: var(--spark-left); top: var(--spark-top); animation: sparkFloat var(--spark-duration) ease-in-out var(--spark-delay) infinite; }
+  @keyframes sparkFloat { 0%,100% { opacity: .08; transform: translate3d(0,8px,0) rotate(0deg) scale(.7); } 50% { opacity: .72; transform: translate3d(10px,-16px,0) rotate(90deg) scale(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .001ms !important; }
+  }
 </style>
 
 <!-- ============ HUD ============ -->
@@ -2114,6 +2163,61 @@ function showResults(r) {
   show('results');
 }
 function replayLast() { if (lastGame) lastGame(); else show('menu'); }
+
+// ==================== CAPA DE MOVIMIENTO ====================
+function initMotionLayer() {
+  const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!motionOK) return;
+
+  // Inclinación 3D suave: da profundidad sin mover el layout.
+  document.addEventListener('pointermove', (event) => {
+    const card = event.target.closest('.mode-card, .table-card, .pet-card, .ach-card, .adv-node');
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    card.style.setProperty('--tilt-x', `${(-y * 5).toFixed(2)}deg`);
+    card.style.setProperty('--tilt-y', `${(x * 5).toFixed(2)}deg`);
+  }, { passive: true });
+
+  document.addEventListener('pointerout', (event) => {
+    const card = event.target.closest('.mode-card, .table-card, .pet-card, .ach-card, .adv-node');
+    if (card && !card.contains(event.relatedTarget)) {
+      card.style.removeProperty('--tilt-x');
+      card.style.removeProperty('--tilt-y');
+    }
+  }, { passive: true });
+
+  // Onda de impacto en botones y elementos jugables.
+  document.addEventListener('click', (event) => {
+    const target = event.target.closest('.btn, .mode-card, .table-card, .answer-btn, .mem-card, .adv-node');
+    if (!target || target.disabled) return;
+    const rect = target.getBoundingClientRect();
+    target.style.position = target.style.position || 'relative';
+    target.style.overflow = 'hidden';
+    const ripple = document.createElement('span');
+    ripple.className = 'tap-ripple';
+    ripple.style.left = `${event.clientX - rect.left}px`;
+    ripple.style.top = `${event.clientY - rect.top}px`;
+    target.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+  }, { passive: true });
+
+  // Chispas muy sutiles para mantener vivo el fondo sin distraer.
+  const symbols = ['✦', '✧', '·', '✺'];
+  for (let i = 0; i < 12; i++) {
+    const spark = document.createElement('span');
+    spark.className = 'ambient-spark';
+    spark.textContent = symbols[i % symbols.length];
+    spark.style.setProperty('--spark-left', `${8 + Math.random() * 84}%`);
+    spark.style.setProperty('--spark-top', `${8 + Math.random() * 84}%`);
+    spark.style.setProperty('--spark-size', `${0.55 + Math.random() * 0.8}rem`);
+    spark.style.setProperty('--spark-duration', `${4.5 + Math.random() * 4}s`);
+    spark.style.setProperty('--spark-delay', `${-Math.random() * 5}s`);
+    document.body.appendChild(spark);
+  }
+}
+initMotionLayer();
 
 // ==================== ARRANQUE ====================
 ensureDailyMissions();
